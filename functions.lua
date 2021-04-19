@@ -47,8 +47,8 @@ end
 function AngleBetweenCoordinates(x1, y1, x2, y2) return bj_RADTODEG * Atan2(y2 - y1, x2 - x1) end
 
 ---get angle between two units without locations
----@param unitA handle @Unit 1
----@param unitB handle @Unit 2
+---@param unitA any @Unit 1
+---@param unitB any @Unit 2
 ---@return number @angle between 0 and 360
 function AngleBetweenUnits(unitA, unitB)
 	return AngleBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))

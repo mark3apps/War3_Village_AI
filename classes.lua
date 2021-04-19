@@ -374,7 +374,7 @@ function ai.Init(overallTick, overallSplit)
 
 	---Adds an additional action to the picked route step  Applies to the latest defined Route
 	---@param time number The amount of time the unit will stop for before continueing on to the next action / step / trigger
-	---@param lookAtRect rect OPTIONAL | nil | The rect that the unit will need to look at
+	---@param lookAtRect any OPTIONAL | nil | The rect that the unit will need to look at
 	---@param animation string OPTIONAL | nil | The string of the animation you want the unit to play at this action
 	---@param loop boolean OPTIONAL | false | Whether or not the animation specified should loop until the end or play once and pause
 	---@return boolean
