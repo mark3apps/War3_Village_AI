@@ -1,0 +1,1668 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Tables">Tables</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/classes.html">classes</a></li>
+  <li><strong>functions</strong></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>functions</code></h1>
+<p>This contains all of the generic functions that can be used.</p>
+<p>  A lot of it is to make handlefree versions of normal blizzard commands </p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#TableContains">TableContains (table, element)</a></td>
+	<td class="summary">Returns true if the value is found in the table.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#TableRemoveValue">TableRemoveValue (table, value)</a></td>
+	<td class="summary">Remove a value from a table</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#TableFind">TableFind (tab, el)</a></td>
+	<td class="summary">Find the index of a value in a table.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#DistanceBetweenCoordinates">DistanceBetweenCoordinates (x1, y1, x2, y2)</a></td>
+	<td class="summary">Get the distance between 2 sets of Coordinates (Not handles used)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#AngleBetweenCoordinates">AngleBetweenCoordinates (x1, y1, x2, y2)</a></td>
+	<td class="summary">get angle between two sets of coordinates without locations</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#AngleBetweenUnits">AngleBetweenUnits (unitA, unitB)</a></td>
+	<td class="summary">get angle between two units without locations</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#PolarProjectionCoordinates">PolarProjectionCoordinates (x, y, dist, angle)</a></td>
+	<td class="summary">Polar projection from point (Doesn't Leak)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Debugfunc">Debugfunc (func, name)</a></td>
+	<td class="summary">raps your code in a "Try" loop so you can see errors printed in the log at runtime.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#CC2Four">CC2Four (num)</a></td>
+	<td class="summary">Converts integer formated types into the 4 digit strings (Opposite of FourCC()) Author: Taysen</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#GetRandomCoordinatesInRect">GetRandomCoordinatesInRect (rect)</a></td>
+	<td class="summary">Get a random xy in the specified rect</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#GetRandomCoordinatesInPoints">GetRandomCoordinatesInPoints (xMin, xMax, yMin, yMax)</a></td>
+	<td class="summary">Get a random xy in the specified datapoints</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#WaitWhileOrder">WaitWhileOrder (unit, time, order, tick)</a></td>
+	<td class="summary">Wait until Order ends or until the amount of time specified</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ValueFactor">ValueFactor (level, base, previousFactor, levelFactor, constant)</a></td>
+	<td class="summary">A system that allow you to duplicate the functionality of auto-filling in the Object Editor</td>
+	</tr>
+</table>
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#oid">oid</a></td>
+	<td class="summary">A table of all of the Order ID's that exist in Warcraft 3 Author Nestharus (converted to LUA by KickKing)</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "TableContains"></a>
+    <strong>TableContains (table, element)</strong>
+    </dt>
+    <dd>
+    Returns true if the value is found in the table.  Author: KickKing
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">table</span>
+         table
+        </li>
+        <li><span class="parameter">element</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean @true if found, false if not
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "TableRemoveValue"></a>
+    <strong>TableRemoveValue (table, value)</strong>
+    </dt>
+    <dd>
+    Remove a value from a table
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">table</span>
+         table
+        </li>
+        <li><span class="parameter">value</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean @true if successful
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "TableFind"></a>
+    <strong>TableFind (tab, el)</strong>
+    </dt>
+    <dd>
+    Find the index of a value in a table.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">tab</span>
+         table
+        </li>
+        <li><span class="parameter">el</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        number @Returns the index
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "DistanceBetweenCoordinates"></a>
+    <strong>DistanceBetweenCoordinates (x1, y1, x2, y2)</strong>
+    </dt>
+    <dd>
+    Get the distance between 2 sets of Coordinates (Not handles used)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x1</span>
+         number
+        </li>
+        <li><span class="parameter">y1</span>
+         number
+        </li>
+        <li><span class="parameter">x2</span>
+         number
+        </li>
+        <li><span class="parameter">y2</span>
+         number
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        number
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "AngleBetweenCoordinates"></a>
+    <strong>AngleBetweenCoordinates (x1, y1, x2, y2)</strong>
+    </dt>
+    <dd>
+    get angle between two sets of coordinates without locations
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x1</span>
+         number
+        </li>
+        <li><span class="parameter">y1</span>
+         number
+        </li>
+        <li><span class="parameter">x2</span>
+         number
+        </li>
+        <li><span class="parameter">y2</span>
+         number
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        number @angle between 0 and 360
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "AngleBetweenUnits"></a>
+    <strong>AngleBetweenUnits (unitA, unitB)</strong>
+    </dt>
+    <dd>
+    get angle between two units without locations
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unitA</span>
+         handle @Unit 1
+        </li>
+        <li><span class="parameter">unitB</span>
+         handle @Unit 2
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        number @angle between 0 and 360
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "PolarProjectionCoordinates"></a>
+    <strong>PolarProjectionCoordinates (x, y, dist, angle)</strong>
+    </dt>
+    <dd>
+    Polar projection from point (Doesn't Leak)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+         number
+        </li>
+        <li><span class="parameter">y</span>
+         number
+        </li>
+        <li><span class="parameter">dist</span>
+         number
+        </li>
+        <li><span class="parameter">angle</span>
+         number
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        number @x</li>
+        <li>
+        number @y</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Debugfunc"></a>
+    <strong>Debugfunc (func, name)</strong>
+    </dt>
+    <dd>
+    raps your code in a "Try" loop so you can see errors printed in the log at runtime.   Author: Planetary
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">func</span>
+         any
+        </li>
+        <li><span class="parameter">name</span>
+         string @Name the same as your function name
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "CC2Four"></a>
+    <strong>CC2Four (num)</strong>
+    </dt>
+    <dd>
+    Converts integer formated types into the 4 digit strings (Opposite of FourCC()) Author: Taysen
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">num</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        any
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "GetRandomCoordinatesInRect"></a>
+    <strong>GetRandomCoordinatesInRect (rect)</strong>
+    </dt>
+    <dd>
+    Get a random xy in the specified rect
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">rect</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        any</li>
+        <li>
+        any</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "GetRandomCoordinatesInPoints"></a>
+    <strong>GetRandomCoordinatesInPoints (xMin, xMax, yMin, yMax)</strong>
+    </dt>
+    <dd>
+    Get a random xy in the specified datapoints
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">xMin</span>
+         number
+        </li>
+        <li><span class="parameter">xMax</span>
+         number
+        </li>
+        <li><span class="parameter">yMin</span>
+         number
+        </li>
+        <li><span class="parameter">yMax</span>
+         number
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        number</li>
+        <li>
+        number</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "WaitWhileOrder"></a>
+    <strong>WaitWhileOrder (unit, time, order, tick)</strong>
+    </dt>
+    <dd>
+    Wait until Order ends or until the amount of time specified
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any @This is the Unit to watch
+        </li>
+        <li><span class="parameter">time</span>
+         any @OPTIONAL | 2 | The max amount of time to wait
+        </li>
+        <li><span class="parameter">order</span>
+         any @OPTIONAL | oid.move | The order the continue to wait until it's no longer what the unit is doing
+        </li>
+        <li><span class="parameter">tick</span>
+         any @OPTIONAL | 0.1 | The amount of time to wait between checks
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ValueFactor"></a>
+    <strong>ValueFactor (level, base, previousFactor, levelFactor, constant)</strong>
+    </dt>
+    <dd>
+    A system that allow you to duplicate the functionality of auto-filling in the Object Editor
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">level</span>
+                     number @How many Levels or iterations to use for this
+        </li>
+        <li><span class="parameter">base</span>
+                      number @The number to start with
+        </li>
+        <li><span class="parameter">previousFactor</span>
+            number @Multiply the previous level by this value
+        </li>
+        <li><span class="parameter">levelFactor</span>
+               number @This value exponential adds to itself every level
+        </li>
+        <li><span class="parameter">constant</span>
+                  number @This gets added every level
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        number @The calculated Value
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "oid"></a>
+    <strong>oid</strong>
+    </dt>
+    <dd>
+    A table of all of the Order ID's that exist in Warcraft 3 Author Nestharus (converted to LUA by KickKing)
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">OFFSET</span>
+
+        </li>
+        <li><span class="parameter">absorb</span>
+
+        </li>
+        <li><span class="parameter">acidbomb</span>
+
+        </li>
+        <li><span class="parameter">acolyteharvest</span>
+
+        </li>
+        <li><span class="parameter">AImove</span>
+
+        </li>
+        <li><span class="parameter">ambush</span>
+
+        </li>
+        <li><span class="parameter">ancestralspirit</span>
+
+        </li>
+        <li><span class="parameter">ancestralspirittarget</span>
+
+        </li>
+        <li><span class="parameter">animatedead</span>
+
+        </li>
+        <li><span class="parameter">antimagicshell</span>
+
+        </li>
+        <li><span class="parameter">attack</span>
+
+        </li>
+        <li><span class="parameter">attackground</span>
+
+        </li>
+        <li><span class="parameter">attackonce</span>
+
+        </li>
+        <li><span class="parameter">attributemodskill</span>
+
+        </li>
+        <li><span class="parameter">auraunholy</span>
+
+        </li>
+        <li><span class="parameter">auravampiric</span>
+
+        </li>
+        <li><span class="parameter">autodispel</span>
+
+        </li>
+        <li><span class="parameter">autodispeloff</span>
+
+        </li>
+        <li><span class="parameter">autodispelon</span>
+
+        </li>
+        <li><span class="parameter">autoentangle</span>
+
+        </li>
+        <li><span class="parameter">autoentangleinstant</span>
+
+        </li>
+        <li><span class="parameter">autoharvestgold</span>
+
+        </li>
+        <li><span class="parameter">autoharvestlumber</span>
+
+        </li>
+        <li><span class="parameter">avatar</span>
+
+        </li>
+        <li><span class="parameter">avengerform</span>
+
+        </li>
+        <li><span class="parameter">awaken</span>
+
+        </li>
+        <li><span class="parameter">banish</span>
+
+        </li>
+        <li><span class="parameter">barkskin</span>
+
+        </li>
+        <li><span class="parameter">barkskinoff</span>
+
+        </li>
+        <li><span class="parameter">barkskinon</span>
+
+        </li>
+        <li><span class="parameter">battleroar</span>
+
+        </li>
+        <li><span class="parameter">battlestations</span>
+
+        </li>
+        <li><span class="parameter">bearform</span>
+
+        </li>
+        <li><span class="parameter">berserk</span>
+
+        </li>
+        <li><span class="parameter">blackarrow</span>
+
+        </li>
+        <li><span class="parameter">blackarrowoff</span>
+
+        </li>
+        <li><span class="parameter">blackarrowon</span>
+
+        </li>
+        <li><span class="parameter">blight</span>
+
+        </li>
+        <li><span class="parameter">blink</span>
+
+        </li>
+        <li><span class="parameter">blizzard</span>
+
+        </li>
+        <li><span class="parameter">bloodlust</span>
+
+        </li>
+        <li><span class="parameter">bloodlustoff</span>
+
+        </li>
+        <li><span class="parameter">bloodluston</span>
+
+        </li>
+        <li><span class="parameter">board</span>
+
+        </li>
+        <li><span class="parameter">breathoffire</span>
+
+        </li>
+        <li><span class="parameter">breathoffrost</span>
+
+        </li>
+        <li><span class="parameter">build</span>
+
+        </li>
+        <li><span class="parameter">burrow</span>
+
+        </li>
+        <li><span class="parameter">cannibalize</span>
+
+        </li>
+        <li><span class="parameter">carrionscarabs</span>
+
+        </li>
+        <li><span class="parameter">carrionscarabsinstant</span>
+
+        </li>
+        <li><span class="parameter">carrionscarabsoff</span>
+
+        </li>
+        <li><span class="parameter">carrionscarabson</span>
+
+        </li>
+        <li><span class="parameter">carrionswarm</span>
+
+        </li>
+        <li><span class="parameter">chainlightning</span>
+
+        </li>
+        <li><span class="parameter">channel</span>
+
+        </li>
+        <li><span class="parameter">charm</span>
+
+        </li>
+        <li><span class="parameter">chemicalrage</span>
+
+        </li>
+        <li><span class="parameter">cloudoffog</span>
+
+        </li>
+        <li><span class="parameter">clusterrockets</span>
+
+        </li>
+        <li><span class="parameter">coldarrows</span>
+
+        </li>
+        <li><span class="parameter">coldarrowstarg</span>
+
+        </li>
+        <li><span class="parameter">controlmagic</span>
+
+        </li>
+        <li><span class="parameter">corporealform</span>
+
+        </li>
+        <li><span class="parameter">corrosivebreath</span>
+
+        </li>
+        <li><span class="parameter">coupleinstant</span>
+
+        </li>
+        <li><span class="parameter">coupletarget</span>
+
+        </li>
+        <li><span class="parameter">creepanimatedead</span>
+
+        </li>
+        <li><span class="parameter">creepdevour</span>
+
+        </li>
+        <li><span class="parameter">creepheal</span>
+
+        </li>
+        <li><span class="parameter">creephealoff</span>
+
+        </li>
+        <li><span class="parameter">creephealon</span>
+
+        </li>
+        <li><span class="parameter">creepthunderbolt</span>
+
+        </li>
+        <li><span class="parameter">creepthunderclap</span>
+
+        </li>
+        <li><span class="parameter">cripple</span>
+
+        </li>
+        <li><span class="parameter">curse</span>
+
+        </li>
+        <li><span class="parameter">curseoff</span>
+
+        </li>
+        <li><span class="parameter">curseon</span>
+
+        </li>
+        <li><span class="parameter">cyclone</span>
+
+        </li>
+        <li><span class="parameter">darkconversion</span>
+
+        </li>
+        <li><span class="parameter">darkportal</span>
+
+        </li>
+        <li><span class="parameter">darkritual</span>
+
+        </li>
+        <li><span class="parameter">darksummoning</span>
+
+        </li>
+        <li><span class="parameter">deathanddecay</span>
+
+        </li>
+        <li><span class="parameter">deathcoil</span>
+
+        </li>
+        <li><span class="parameter">deathpact</span>
+
+        </li>
+        <li><span class="parameter">decouple</span>
+
+        </li>
+        <li><span class="parameter">defend</span>
+
+        </li>
+        <li><span class="parameter">detectaoe</span>
+
+        </li>
+        <li><span class="parameter">detonate</span>
+
+        </li>
+        <li><span class="parameter">devour</span>
+
+        </li>
+        <li><span class="parameter">devourmagic</span>
+
+        </li>
+        <li><span class="parameter">disassociate</span>
+
+        </li>
+        <li><span class="parameter">disenchant</span>
+
+        </li>
+        <li><span class="parameter">dismount</span>
+
+        </li>
+        <li><span class="parameter">dispel</span>
+
+        </li>
+        <li><span class="parameter">divineshield</span>
+
+        </li>
+        <li><span class="parameter">doom</span>
+
+        </li>
+        <li><span class="parameter">drain</span>
+
+        </li>
+        <li><span class="parameter">dreadlordinferno</span>
+
+        </li>
+        <li><span class="parameter">dropitem</span>
+
+        </li>
+        <li><span class="parameter">drunkenhaze</span>
+
+        </li>
+        <li><span class="parameter">earthquake</span>
+
+        </li>
+        <li><span class="parameter">eattree</span>
+
+        </li>
+        <li><span class="parameter">elementalfury</span>
+
+        </li>
+        <li><span class="parameter">ensnare</span>
+
+        </li>
+        <li><span class="parameter">ensnareoff</span>
+
+        </li>
+        <li><span class="parameter">ensnareon</span>
+
+        </li>
+        <li><span class="parameter">entangle</span>
+
+        </li>
+        <li><span class="parameter">entangleinstant</span>
+
+        </li>
+        <li><span class="parameter">entanglingroots</span>
+
+        </li>
+        <li><span class="parameter">etherealform</span>
+
+        </li>
+        <li><span class="parameter">evileye</span>
+
+        </li>
+        <li><span class="parameter">faeriefire</span>
+
+        </li>
+        <li><span class="parameter">faeriefireoff</span>
+
+        </li>
+        <li><span class="parameter">faeriefireon</span>
+
+        </li>
+        <li><span class="parameter">fanofknives</span>
+
+        </li>
+        <li><span class="parameter">farsight</span>
+
+        </li>
+        <li><span class="parameter">fingerofdeath</span>
+
+        </li>
+        <li><span class="parameter">firebolt</span>
+
+        </li>
+        <li><span class="parameter">flamestrike</span>
+
+        </li>
+        <li><span class="parameter">flamingarrows</span>
+
+        </li>
+        <li><span class="parameter">flamingarrowstarg</span>
+
+        </li>
+        <li><span class="parameter">flamingattack</span>
+
+        </li>
+        <li><span class="parameter">flamingattacktarg</span>
+
+        </li>
+        <li><span class="parameter">flare</span>
+
+        </li>
+        <li><span class="parameter">forceboard</span>
+
+        </li>
+        <li><span class="parameter">forceofnature</span>
+
+        </li>
+        <li><span class="parameter">forkedlightning</span>
+
+        </li>
+        <li><span class="parameter">freezingbreath</span>
+
+        </li>
+        <li><span class="parameter">frenzy</span>
+
+        </li>
+        <li><span class="parameter">frenzyoff</span>
+
+        </li>
+        <li><span class="parameter">frenzyon</span>
+
+        </li>
+        <li><span class="parameter">frostarmor</span>
+
+        </li>
+        <li><span class="parameter">frostarmoroff</span>
+
+        </li>
+        <li><span class="parameter">frostarmoron</span>
+
+        </li>
+        <li><span class="parameter">frostnova</span>
+
+        </li>
+        <li><span class="parameter">getitem</span>
+
+        </li>
+        <li><span class="parameter">gold2lumber</span>
+
+        </li>
+        <li><span class="parameter">grabtree</span>
+
+        </li>
+        <li><span class="parameter">harvest</span>
+
+        </li>
+        <li><span class="parameter">heal</span>
+
+        </li>
+        <li><span class="parameter">healingspray</span>
+
+        </li>
+        <li><span class="parameter">healingward</span>
+
+        </li>
+        <li><span class="parameter">healingwave</span>
+
+        </li>
+        <li><span class="parameter">healoff</span>
+
+        </li>
+        <li><span class="parameter">healon</span>
+
+        </li>
+        <li><span class="parameter">hex</span>
+
+        </li>
+        <li><span class="parameter">holdposition</span>
+
+        </li>
+        <li><span class="parameter">holybolt</span>
+
+        </li>
+        <li><span class="parameter">howlofterror</span>
+
+        </li>
+        <li><span class="parameter">humanbuild</span>
+
+        </li>
+        <li><span class="parameter">immolation</span>
+
+        </li>
+        <li><span class="parameter">impale</span>
+
+        </li>
+        <li><span class="parameter">incineratearrow</span>
+
+        </li>
+        <li><span class="parameter">incineratearrowoff</span>
+
+        </li>
+        <li><span class="parameter">incineratearrowon</span>
+
+        </li>
+        <li><span class="parameter">inferno</span>
+
+        </li>
+        <li><span class="parameter">innerfire</span>
+
+        </li>
+        <li><span class="parameter">innerfireoff</span>
+
+        </li>
+        <li><span class="parameter">innerfireon</span>
+
+        </li>
+        <li><span class="parameter">instant</span>
+
+        </li>
+        <li><span class="parameter">invisibility</span>
+
+        </li>
+        <li><span class="parameter">itemillusion</span>
+
+        </li>
+        <li><span class="parameter">lavamonster</span>
+
+        </li>
+        <li><span class="parameter">lightningshield</span>
+
+        </li>
+        <li><span class="parameter">load</span>
+
+        </li>
+        <li><span class="parameter">loadarcher</span>
+
+        </li>
+        <li><span class="parameter">loadcorpse</span>
+
+        </li>
+        <li><span class="parameter">loadcorpseinstant</span>
+
+        </li>
+        <li><span class="parameter">locustswarm</span>
+
+        </li>
+        <li><span class="parameter">lumber2gold</span>
+
+        </li>
+        <li><span class="parameter">magicdefense</span>
+
+        </li>
+        <li><span class="parameter">magicleash</span>
+
+        </li>
+        <li><span class="parameter">magicundefense</span>
+
+        </li>
+        <li><span class="parameter">manaburn</span>
+
+        </li>
+        <li><span class="parameter">manaflareoff</span>
+
+        </li>
+        <li><span class="parameter">manaflareon</span>
+
+        </li>
+        <li><span class="parameter">manashieldoff</span>
+
+        </li>
+        <li><span class="parameter">manashieldon</span>
+
+        </li>
+        <li><span class="parameter">massteleport</span>
+
+        </li>
+        <li><span class="parameter">mechanicalcritter</span>
+
+        </li>
+        <li><span class="parameter">metamorphosis</span>
+
+        </li>
+        <li><span class="parameter">militia</span>
+
+        </li>
+        <li><span class="parameter">militiaconvert</span>
+
+        </li>
+        <li><span class="parameter">militiaoff</span>
+
+        </li>
+        <li><span class="parameter">militiaunconvert</span>
+
+        </li>
+        <li><span class="parameter">mindrot</span>
+
+        </li>
+        <li><span class="parameter">mirrorimage</span>
+
+        </li>
+        <li><span class="parameter">monsoon</span>
+
+        </li>
+        <li><span class="parameter">mount</span>
+
+        </li>
+        <li><span class="parameter">mounthippogryph</span>
+
+        </li>
+        <li><span class="parameter">move</span>
+
+        </li>
+        <li><span class="parameter">nagabuild</span>
+
+        </li>
+        <li><span class="parameter">neutraldetectaoe</span>
+
+        </li>
+        <li><span class="parameter">neutralinteract</span>
+
+        </li>
+        <li><span class="parameter">neutralspell</span>
+
+        </li>
+        <li><span class="parameter">nightelfbuild</span>
+
+        </li>
+        <li><span class="parameter">orcbuild</span>
+
+        </li>
+        <li><span class="parameter">parasite</span>
+
+        </li>
+        <li><span class="parameter">parasiteoff</span>
+
+        </li>
+        <li><span class="parameter">parasiteon</span>
+
+        </li>
+        <li><span class="parameter">patrol</span>
+
+        </li>
+        <li><span class="parameter">phaseshift</span>
+
+        </li>
+        <li><span class="parameter">phaseshiftinstant</span>
+
+        </li>
+        <li><span class="parameter">phaseshiftoff</span>
+
+        </li>
+        <li><span class="parameter">phaseshifton</span>
+
+        </li>
+        <li><span class="parameter">phoenixfire</span>
+
+        </li>
+        <li><span class="parameter">phoenixmorph</span>
+
+        </li>
+        <li><span class="parameter">poisonarrows</span>
+
+        </li>
+        <li><span class="parameter">poisonarrowstarg</span>
+
+        </li>
+        <li><span class="parameter">polymorph</span>
+
+        </li>
+        <li><span class="parameter">possession</span>
+
+        </li>
+        <li><span class="parameter">preservation</span>
+
+        </li>
+        <li><span class="parameter">purge</span>
+
+        </li>
+        <li><span class="parameter">rainofchaos</span>
+
+        </li>
+        <li><span class="parameter">rainoffire</span>
+
+        </li>
+        <li><span class="parameter">raisedead</span>
+
+        </li>
+        <li><span class="parameter">raisedeadoff</span>
+
+        </li>
+        <li><span class="parameter">raisedeadon</span>
+
+        </li>
+        <li><span class="parameter">ravenform</span>
+
+        </li>
+        <li><span class="parameter">recharge</span>
+
+        </li>
+        <li><span class="parameter">rechargeoff</span>
+
+        </li>
+        <li><span class="parameter">rechargeon</span>
+
+        </li>
+        <li><span class="parameter">rejuvination</span>
+
+        </li>
+        <li><span class="parameter">renew</span>
+
+        </li>
+        <li><span class="parameter">renewoff</span>
+
+        </li>
+        <li><span class="parameter">renewon</span>
+
+        </li>
+        <li><span class="parameter">repair</span>
+
+        </li>
+        <li><span class="parameter">repairoff</span>
+
+        </li>
+        <li><span class="parameter">repairon</span>
+
+        </li>
+        <li><span class="parameter">replenish</span>
+
+        </li>
+        <li><span class="parameter">replenishlife</span>
+
+        </li>
+        <li><span class="parameter">replenishlifeoff</span>
+
+        </li>
+        <li><span class="parameter">replenishlifeon</span>
+
+        </li>
+        <li><span class="parameter">replenishmana</span>
+
+        </li>
+        <li><span class="parameter">replenishmanaoff</span>
+
+        </li>
+        <li><span class="parameter">replenishmanaon</span>
+
+        </li>
+        <li><span class="parameter">replenishoff</span>
+
+        </li>
+        <li><span class="parameter">replenishon</span>
+
+        </li>
+        <li><span class="parameter">request_hero</span>
+
+        </li>
+        <li><span class="parameter">requestsacrifice</span>
+
+        </li>
+        <li><span class="parameter">restoration</span>
+
+        </li>
+        <li><span class="parameter">restorationoff</span>
+
+        </li>
+        <li><span class="parameter">restorationon</span>
+
+        </li>
+        <li><span class="parameter">resumebuild</span>
+
+        </li>
+        <li><span class="parameter">resumeharvesting</span>
+
+        </li>
+        <li><span class="parameter">resurrection</span>
+
+        </li>
+        <li><span class="parameter">returnresources</span>
+
+        </li>
+        <li><span class="parameter">revenge</span>
+
+        </li>
+        <li><span class="parameter">revive</span>
+
+        </li>
+        <li><span class="parameter">reveal</span>
+
+        </li>
+        <li><span class="parameter">roar</span>
+
+        </li>
+        <li><span class="parameter">robogoblin</span>
+
+        </li>
+        <li><span class="parameter">root</span>
+
+        </li>
+        <li><span class="parameter">sacrifice</span>
+
+        </li>
+        <li><span class="parameter">sanctuary</span>
+
+        </li>
+        <li><span class="parameter">scout</span>
+
+        </li>
+        <li><span class="parameter">selfdestruct</span>
+
+        </li>
+        <li><span class="parameter">selfdestructoff</span>
+
+        </li>
+        <li><span class="parameter">selfdestructon</span>
+
+        </li>
+        <li><span class="parameter">sentinel</span>
+
+        </li>
+        <li><span class="parameter">setrally</span>
+
+        </li>
+        <li><span class="parameter">shadowsight</span>
+
+        </li>
+        <li><span class="parameter">shadowstrike</span>
+
+        </li>
+        <li><span class="parameter">shockwave</span>
+
+        </li>
+        <li><span class="parameter">silence</span>
+
+        </li>
+        <li><span class="parameter">sleep</span>
+
+        </li>
+        <li><span class="parameter">slow</span>
+
+        </li>
+        <li><span class="parameter">slowoff</span>
+
+        </li>
+        <li><span class="parameter">slowon</span>
+
+        </li>
+        <li><span class="parameter">smart</span>
+
+        </li>
+        <li><span class="parameter">soulburn</span>
+
+        </li>
+        <li><span class="parameter">soulpreservation</span>
+
+        </li>
+        <li><span class="parameter">spellshield</span>
+
+        </li>
+        <li><span class="parameter">spellshieldaoe</span>
+
+        </li>
+        <li><span class="parameter">spellsteal</span>
+
+        </li>
+        <li><span class="parameter">spellstealoff</span>
+
+        </li>
+        <li><span class="parameter">spellstealon</span>
+
+        </li>
+        <li><span class="parameter">spies</span>
+
+        </li>
+        <li><span class="parameter">spiritlink</span>
+
+        </li>
+        <li><span class="parameter">spiritofvengeance</span>
+
+        </li>
+        <li><span class="parameter">spirittroll</span>
+
+        </li>
+        <li><span class="parameter">spiritwolf</span>
+
+        </li>
+        <li><span class="parameter">stampede</span>
+
+        </li>
+        <li><span class="parameter">standdown</span>
+
+        </li>
+        <li><span class="parameter">starfall</span>
+
+        </li>
+        <li><span class="parameter">stasistrap</span>
+
+        </li>
+        <li><span class="parameter">steal</span>
+
+        </li>
+        <li><span class="parameter">stomp</span>
+
+        </li>
+        <li><span class="parameter">stoneform</span>
+
+        </li>
+        <li><span class="parameter">stop</span>
+
+        </li>
+        <li><span class="parameter">submerge</span>
+
+        </li>
+        <li><span class="parameter">summonfactory</span>
+
+        </li>
+        <li><span class="parameter">summongrizzly</span>
+
+        </li>
+        <li><span class="parameter">summonphoenix</span>
+
+        </li>
+        <li><span class="parameter">summonquillbeast</span>
+
+        </li>
+        <li><span class="parameter">summonwareagle</span>
+
+        </li>
+        <li><span class="parameter">tankdroppilot</span>
+
+        </li>
+        <li><span class="parameter">tankloadpilot</span>
+
+        </li>
+        <li><span class="parameter">tankpilot</span>
+
+        </li>
+        <li><span class="parameter">taunt</span>
+
+        </li>
+        <li><span class="parameter">thunderbolt</span>
+
+        </li>
+        <li><span class="parameter">thunderclap</span>
+
+        </li>
+        <li><span class="parameter">tornado</span>
+
+        </li>
+        <li><span class="parameter">townbelloff</span>
+
+        </li>
+        <li><span class="parameter">townbellon</span>
+
+        </li>
+        <li><span class="parameter">tranquility</span>
+
+        </li>
+        <li><span class="parameter">transmute</span>
+
+        </li>
+        <li><span class="parameter">unavatar</span>
+
+        </li>
+        <li><span class="parameter">unavengerform</span>
+
+        </li>
+        <li><span class="parameter">unbearform</span>
+
+        </li>
+        <li><span class="parameter">unburrow</span>
+
+        </li>
+        <li><span class="parameter">uncoldarrows</span>
+
+        </li>
+        <li><span class="parameter">uncorporealform</span>
+
+        </li>
+        <li><span class="parameter">undeadbuild</span>
+
+        </li>
+        <li><span class="parameter">undefend</span>
+
+        </li>
+        <li><span class="parameter">undivineshield</span>
+
+        </li>
+        <li><span class="parameter">unetherealform</span>
+
+        </li>
+        <li><span class="parameter">unflamingarrows</span>
+
+        </li>
+        <li><span class="parameter">unflamingattack</span>
+
+        </li>
+        <li><span class="parameter">unholyfrenzy</span>
+
+        </li>
+        <li><span class="parameter">unimmolation</span>
+
+        </li>
+        <li><span class="parameter">unload</span>
+
+        </li>
+        <li><span class="parameter">unloadall</span>
+
+        </li>
+        <li><span class="parameter">unloadallcorpses</span>
+
+        </li>
+        <li><span class="parameter">unloadallinstant</span>
+
+        </li>
+        <li><span class="parameter">unpoisonarrows</span>
+
+        </li>
+        <li><span class="parameter">unravenform</span>
+
+        </li>
+        <li><span class="parameter">unrobogoblin</span>
+
+        </li>
+        <li><span class="parameter">unroot</span>
+
+        </li>
+        <li><span class="parameter">unstableconcoction</span>
+
+        </li>
+        <li><span class="parameter">unstoneform</span>
+
+        </li>
+        <li><span class="parameter">unsubmerge</span>
+
+        </li>
+        <li><span class="parameter">unsummon</span>
+
+        </li>
+        <li><span class="parameter">unwindwalk</span>
+
+        </li>
+        <li><span class="parameter">vengeance</span>
+
+        </li>
+        <li><span class="parameter">vengeanceinstant</span>
+
+        </li>
+        <li><span class="parameter">vengeanceoff</span>
+
+        </li>
+        <li><span class="parameter">vengeanceon</span>
+
+        </li>
+        <li><span class="parameter">volcano</span>
+
+        </li>
+        <li><span class="parameter">voodoo</span>
+
+        </li>
+        <li><span class="parameter">ward</span>
+
+        </li>
+        <li><span class="parameter">waterelemental</span>
+
+        </li>
+        <li><span class="parameter">wateryminion</span>
+
+        </li>
+        <li><span class="parameter">web</span>
+
+        </li>
+        <li><span class="parameter">weboff</span>
+
+        </li>
+        <li><span class="parameter">webon</span>
+
+        </li>
+        <li><span class="parameter">whirlwind</span>
+
+        </li>
+        <li><span class="parameter">windwalk</span>
+
+        </li>
+        <li><span class="parameter">wispharvest</span>
+
+        </li>
+        <li><span class="parameter">scrollofspeed</span>
+
+        </li>
+        <li><span class="parameter">cancel</span>
+
+        </li>
+        <li><span class="parameter">moveslot1</span>
+
+        </li>
+        <li><span class="parameter">moveslot2</span>
+
+        </li>
+        <li><span class="parameter">moveslot3</span>
+
+        </li>
+        <li><span class="parameter">moveslot4</span>
+
+        </li>
+        <li><span class="parameter">moveslot5</span>
+
+        </li>
+        <li><span class="parameter">moveslot6</span>
+
+        </li>
+        <li><span class="parameter">useslot1</span>
+
+        </li>
+        <li><span class="parameter">useslot2</span>
+
+        </li>
+        <li><span class="parameter">useslot3</span>
+
+        </li>
+        <li><span class="parameter">useslot4</span>
+
+        </li>
+        <li><span class="parameter">useslot5</span>
+
+        </li>
+        <li><span class="parameter">useslot6</span>
+
+        </li>
+        <li><span class="parameter">skillmenu</span>
+
+        </li>
+        <li><span class="parameter">stunned</span>
+
+        </li>
+        <li><span class="parameter">instant1</span>
+
+        </li>
+        <li><span class="parameter">instant2</span>
+
+        </li>
+        <li><span class="parameter">instant3</span>
+
+        </li>
+        <li><span class="parameter">instant4</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2021-04-18 15:09:45 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
