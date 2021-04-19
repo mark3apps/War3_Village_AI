@@ -332,7 +332,7 @@ function ai.Init(overallTick, overallSplit)
 	end
 
 	---Adds at the end of the selected route, a new place for a unit to move to.
-	---@param rect          rect    The Rect (GUI Region) that the unit will walk to
+	---@param rect          any    The Rect (GUI Region) that the unit will walk to
 	---@param speed         number  OPTIONAL | Unit Speed | Walk/Run speed of unit.  (under 100 will walk)
 	---@param point         string  OPTIONAL | "center" | [center, random] Picks either the center of the Rect or a random point in the rect.
 	---@param order         number  OPTIONAL | oid.move |  the order to use to move.
