@@ -25,6 +25,8 @@ ai = {
 	unitGroup = CreateGroup()
 }
 
+
+
 ---This is the first command that need to be run before anything else.  Initializes everything that's needed.
 ---@param overallTick number    OPTIONAL 2 | The interval at which each unit added to AI will update it's intelligence and make decisions   
 ---@param overallSplit number   OPTIONAL 5 | The amount of splits that the Ticks will process Unit intelligence at.  1 means all AI ticks will be processed at the same time, 3 means processing will be split into 3 groups.
@@ -663,6 +665,7 @@ function ai.Init(overallTick, overallSplit)
 		local stepNumber = ai.unit[data.id].stepNumber + 1
 
 		-- If there are no more steps, return
+		if stepNumber == nil or data.route == nil then return false end
 		if stepNumber > ai.route[data.route].stepCount then return false end
 
 		local step = ai.route[data.route].step[stepNumber]
@@ -715,7 +718,7 @@ function ai.Init(overallTick, overallSplit)
 		local actionNumber = data.actionNumber + 1
 
 		-- If There doesn't exist the current step cancel
-		if stepNumber == nil then return end
+		if stepNumber == nil or data.route == nil then return end
 		if stepNumber > ai.route[data.route].stepCount or stepNumber == 0 then return false end
 
 		-- If there are no more actions, return

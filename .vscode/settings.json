@@ -1,5 +1,11 @@
 {
     "Lua.diagnostics.disable": [
         "lowercase-global"
-    ]
+    ],
+    "triggerTaskOnSave.tasks": {
+        "Documentation": [
+            "src/*.lua"
+        ]
+    }, 
+    "triggerTaskOnSave.selectedTask": "Documentation"
 }

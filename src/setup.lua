@@ -1,9 +1,9 @@
-function INIT_Config()
+function Config()
 
 	Debugfunc(function()
 
 		-- Add Towns
-		-- Set up the town, set activity probabiliy per tick and the AI tick Multipler (3% chance to start moving, 1x)
+		-- Set up the town, set activity probabiliy per tick and the AI tick Multipler (3 percent chance to start moving, 1x)
 		ai.town.New("city", 3, 1)
 
 		-- Set the player group that the town finds Hostile
@@ -13,7 +13,7 @@ function INIT_Config()
 		-- meaning units will start at the step closest to their
 		-- location and then finish on that same step by looping
 		-- through all of the steps)
-	    ai.route.New("city_01", true, "inTown")
+		ai.route.New("city_01", true, "inTown")
 		ai.route.Step(gg_rct_Region_000, 100)
 		ai.route.Step(gg_rct_Region_001, 100)
 		ai.route.Step(gg_rct_Region_002, 100)
