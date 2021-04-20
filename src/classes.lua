@@ -27,7 +27,7 @@ ai = {
 
 
 
---- This is the first command that need to be run before anything else.  Initializes everything that's needed.
+--- Test Pull This is the first command that need to be run before anything else.  Initializes everything that's needed.
 ---@param overallTick number    OPTIONAL 2 | The interval at which each unit added to AI will update it's intelligence and make decisions   
 ---@param overallSplit number   OPTIONAL 5 | The amount of splits that the Ticks will process Unit intelligence at.  1 means all AI ticks will be processed at the same time, 3 means processing will be split into 3 groups.
 function ai.Init(overallTick, overallSplit)
