@@ -1,10 +1,10 @@
----This Contains all of the Functions that you'll need to run and set up the AI.  Most of the functions won't need to be used.  as they're used for internal purposes.
+---This Contains all of the Functions that you'll need to run and set up the AI.  Most of the functions won't need to be used.  As they're used for internal purposes.
 ---@diagnostic disable: lowercase-global
 ---@author KickKing
 blank = nil
 
 ---This Table contains all of the functions and data for the Village
----@table ai Contains all of the Towns
+---@table ai
 -- @field town All of the town Functions and Variables
 -- @field townNames All of the Town Names
 -- @field unit All of the Unit Functions and variables
@@ -27,7 +27,7 @@ ai = {
 
 
 
----This is the first command that need to be run before anything else.  Initializes everything that's needed.
+--- This is the first command that need to be run before anything else.  Initializes everything that's needed.
 ---@param overallTick number    OPTIONAL 2 | The interval at which each unit added to AI will update it's intelligence and make decisions   
 ---@param overallSplit number   OPTIONAL 5 | The amount of splits that the Ticks will process Unit intelligence at.  1 means all AI ticks will be processed at the same time, 3 means processing will be split into 3 groups.
 function ai.Init(overallTick, overallSplit)
@@ -473,7 +473,6 @@ function ai.Init(overallTick, overallSplit)
 	---@param shift string OPTIONAL | "day" | ["day", "night", "all"] Specifies when the unit will be active
 	---@param radius number OPTIONAL | 600 | Specifies the units vision radius it uses to detect actions.
 	---@return boolean
-	---@see states
 	function ai.unit.New(town, type, unit, name, shift, radius)
 
 		shift = shift or "day"
@@ -995,7 +994,7 @@ function ai.Init(overallTick, overallSplit)
 	end
 
 	---Unit States Transient
-	-- @section unitStates Transient
+	-- @section unitStates
 	--
 
 	---This is an inbetween state.  Don't manually set it's state to this.
