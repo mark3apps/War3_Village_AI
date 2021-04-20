@@ -6,7 +6,7 @@
         {
             "label": "Documentation",
             "type": "shell",
-            "command": "ldoc -d doc/ ../War3_Village_AI/"
+            "command": "ldoc src/"
         }
     ]
 }
