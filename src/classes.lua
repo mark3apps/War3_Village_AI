@@ -1,6 +1,6 @@
 ---This Contains all of the Functions that you'll need to run and set up the AI.  Most of the functions won't need to be used.  As they're used for internal purposes.
 ---@diagnostic disable: lowercase-global
----@author KickKing
+---@author Mark Wright (KickKing)
 blank = nil
 
 ---This Table contains all of the functions and data for the Village
@@ -24,8 +24,6 @@ ai = {
 	split = 5,
 	unitGroup = CreateGroup()
 }
-
-
 
 --- Test Pull This is the first command that need to be run before anything else.  Initializes everything that's needed.
 ---@param overallTick number    OPTIONAL 2 | The interval at which each unit added to AI will update it's intelligence and make decisions   
@@ -256,7 +254,7 @@ function ai.Init(overallTick, overallSplit)
 	-- @section Region
 	--
 
-	---Set up a new region (Internal Function)
+	---Set up a new region (Internal Function, Don't need to use)
 	---@param rect any
 	function ai.region.New(rect)
 
