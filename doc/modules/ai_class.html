@@ -38,6 +38,10 @@
 <li><a href="#Region_Actions">Region Actions </a></li>
 <li><a href="#Route_Actions">Route Actions </a></li>
 <li><a href="#Unit_Actions">Unit Actions </a></li>
+<li><a href="#Town_States">Town States </a></li>
+<li><a href="#Town_States_Transient">Town States Transient </a></li>
+<li><a href="#Landmark_States">Landmark States </a></li>
+<li><a href="#Landmark_States_Transient">Landmark States Transient </a></li>
 <li><a href="#Unit_States">Unit States </a></li>
 <li><a href="#Unit_States_Transient">Unit States Transient </a></li>
 <li><a href="#Intel_Checks">Intel Checks </a></li>
@@ -255,6 +259,66 @@ Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}</td>
 	<td class="summary">Goes to either the Units next Step, Action or Ends the route  (Use this in GUI 99% of the time)</td>
 	</tr>
 </table>
+<h2><a href="#Town_States">Town States </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#ai.townSTATE.Init">ai.townSTATE.Init ()</a></td>
+	<td class="summary">Town States Functions Init runs when ai.Init() is run</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.townSTATE.Relax">ai.townSTATE.Relax (name)</a></td>
+	<td class="summary">comment</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.townSTATE.Caution">ai.townSTATE.Caution (name)</a></td>
+	<td class="summary">comment</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.townSTATE.Alert">ai.townSTATE.Alert (name)</a></td>
+	<td class="summary">comment</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.townSTATE.Pause">ai.townSTATE.Pause (name)</a></td>
+	<td class="summary">comment</td>
+	</tr>
+</table>
+<h2><a href="#Town_States_Transient">Town States Transient </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#ai.townSTATE.Relaxing">ai.townSTATE.Relaxing (name)</a></td>
+	<td class="summary">comment</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.townSTATE.Cautioning">ai.townSTATE.Cautioning (name)</a></td>
+	<td class="summary">comment</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.townSTATE.Alerting">ai.townSTATE.Alerting (name)</a></td>
+	<td class="summary">comment</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.townSTATE.Pausing">ai.townSTATE.Pausing (name)</a></td>
+	<td class="summary">comment</td>
+	</tr>
+</table>
+<h2><a href="#Landmark_States">Landmark States </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#ai.landmarkSTATE.Init">ai.landmarkSTATE.Init ()</a></td>
+	<td class="summary">Landmark States Functions Init runs when ai.Init() is run</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.landmarkSTATE.Relax">ai.landmarkSTATE.Relax (name)</a></td>
+	<td class="summary">comment</td>
+	</tr>
+</table>
+<h2><a href="#Landmark_States_Transient">Landmark States Transient </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#ai.landmarkSTATE.Relaxing">ai.landmarkSTATE.Relaxing (name)</a></td>
+	<td class="summary">comment</td>
+	</tr>
+</table>
 <h2><a href="#Unit_States">Unit States </a></h2>
 <table class="function_list">
 	<tr>
@@ -304,7 +368,7 @@ Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}</td>
 	<td class="summary">Intel Functions Init runs when ai.Init() is run</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#ai.intel.TownPre">ai.intel.TownPre (town)</a></td>
+	<td class="name" nowrap><a href="#ai.intel.TownPre">ai.intel.TownPre (name)</a></td>
 	<td class="summary">Intelligence for Town Pre State Check</td>
 	</tr>
 	<tr>
@@ -335,8 +399,12 @@ Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}</td>
 	<td class="summary">The Trigger that Loops through units to get Unit Intellegence</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#ai.trig.UnitEntersRegion">ai.trig.UnitEntersRegion</a></td>
+	<td class="name" nowrap><a href="#ai.trig.UnitEntersRoute">ai.trig.UnitEntersRoute</a></td>
 	<td class="summary">Trigger Unit enters a Rect in a Route</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.trig.UnitEntersTown">ai.trig.UnitEntersTown</a></td>
+	<td class="summary">Trigger Unit enters Town</td>
 	</tr>
 </table>
 
@@ -1481,6 +1549,318 @@ Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}
 
 </dd>
 </dl>
+    <h2 class="section-header "><a name="Town_States"></a>Town States </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "ai.townSTATE.Init"></a>
+    <strong>ai.townSTATE.Init ()</strong>
+    </dt>
+    <dd>
+    Town States Functions Init runs when ai.Init() is run
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ai_class.html#ai.Init">ai.Init</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "ai.townSTATE.Relax"></a>
+    <strong>ai.townSTATE.Relax (name)</strong>
+    </dt>
+    <dd>
+    comment
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.townSTATE.Caution"></a>
+    <strong>ai.townSTATE.Caution (name)</strong>
+    </dt>
+    <dd>
+    comment
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.townSTATE.Alert"></a>
+    <strong>ai.townSTATE.Alert (name)</strong>
+    </dt>
+    <dd>
+    comment
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.townSTATE.Pause"></a>
+    <strong>ai.townSTATE.Pause (name)</strong>
+    </dt>
+    <dd>
+    comment
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Town_States_Transient"></a>Town States Transient </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "ai.townSTATE.Relaxing"></a>
+    <strong>ai.townSTATE.Relaxing (name)</strong>
+    </dt>
+    <dd>
+    comment
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.townSTATE.Cautioning"></a>
+    <strong>ai.townSTATE.Cautioning (name)</strong>
+    </dt>
+    <dd>
+    comment
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.townSTATE.Alerting"></a>
+    <strong>ai.townSTATE.Alerting (name)</strong>
+    </dt>
+    <dd>
+    comment
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.townSTATE.Pausing"></a>
+    <strong>ai.townSTATE.Pausing (name)</strong>
+    </dt>
+    <dd>
+    comment
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Landmark_States"></a>Landmark States </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "ai.landmarkSTATE.Init"></a>
+    <strong>ai.landmarkSTATE.Init ()</strong>
+    </dt>
+    <dd>
+    Landmark States Functions Init runs when ai.Init() is run
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ai_class.html#ai.Init">ai.Init</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "ai.landmarkSTATE.Relax"></a>
+    <strong>ai.landmarkSTATE.Relax (name)</strong>
+    </dt>
+    <dd>
+    comment
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Landmark_States_Transient"></a>Landmark States Transient </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "ai.landmarkSTATE.Relaxing"></a>
+    <strong>ai.landmarkSTATE.Relaxing (name)</strong>
+    </dt>
+    <dd>
+    comment
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+</dl>
     <h2 class="section-header "><a name="Unit_States"></a>Unit States </h2>
 
     <dl class="function">
@@ -1758,7 +2138,7 @@ Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}
 </dd>
     <dt>
     <a name = "ai.intel.TownPre"></a>
-    <strong>ai.intel.TownPre (town)</strong>
+    <strong>ai.intel.TownPre (name)</strong>
     </dt>
     <dd>
     Intelligence for Town Pre State Check
@@ -1766,7 +2146,7 @@ Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">town</span>
+        <li><span class="parameter">name</span>
          any
         </li>
     </ul>
@@ -1908,11 +2288,25 @@ Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}
 
 </dd>
     <dt>
-    <a name = "ai.trig.UnitEntersRegion"></a>
-    <strong>ai.trig.UnitEntersRegion</strong>
+    <a name = "ai.trig.UnitEntersRoute"></a>
+    <strong>ai.trig.UnitEntersRoute</strong>
     </dt>
     <dd>
     Trigger Unit enters a Rect in a Route
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.trig.UnitEntersTown"></a>
+    <strong>ai.trig.UnitEntersTown</strong>
+    </dt>
+    <dd>
+    Trigger Unit enters Town
 
 
 
@@ -1928,7 +2322,7 @@ Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2021-04-24 22:28:25 </i>
+<i style="float:right;">Last updated 2021-04-25 00:21:55 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

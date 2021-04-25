@@ -1,6 +1,17 @@
 ---This Contains all of the Functions that you'll need to run and set up the AI.  Most of the functions won't need to be used.  As they're used for internal purposes.
 ---@author Mark Wright (KickKing)
-ai = {landmark = {}, town = {}, region = {}, route = {}, unit = {}, unitSTATE = {}, intel = {}, trig = {}}
+ai = {
+	landmark = {},
+	town = {},
+	region = {},
+	route = {},
+	unit = {},
+	unitSTATE = {},
+	townSTATE = {},
+	landmarkSTATE = {},
+	intel = {},
+	trig = {}
+}
 
 ---Initialization.
 -- Initialization of AI Villagers
@@ -18,9 +29,9 @@ function ai.Init(tickUnit, splitUnit, tickTown)
 		tickUnit = tickUnit or ai.tick
 		splitUnit = splitUnit or ai.split
 
-		
 		ai.landmarkNames = {}
 		ai.townNames = {}
+		ai.townRegions = {}
 		ai.townCount = 0
 		ai.unitGroup = CreateGroup()
 		ai.unitGroupTick = CreateGroup()
@@ -34,6 +45,8 @@ function ai.Init(tickUnit, splitUnit, tickTown)
 		ai.route.Init()
 		ai.unit.Init()
 		ai.unitSTATE.Init()
+		ai.townSTATE.Init()
+		ai.landmarkSTATE.Init()
 		ai.intel.Init()
 		ai.trig.Init()
 
@@ -43,9 +56,11 @@ function ai.Init(tickUnit, splitUnit, tickTown)
 
 			-- Add Tick Event and Start Unit Loop Inteligence
 			EnableTrigger(ai.trig.UnitLoop)
+			EnableTrigger(ai.trig.TownLoop)
 
 			-- Enable Unit Route Management
-			EnableTrigger(ai.trig.UnitEntersRegion)
+			EnableTrigger(ai.trig.UnitEntersRoute)
+			EnableTrigger(ai.trig.UnitEntersTown)
 
 			return true
 
@@ -59,7 +74,7 @@ function ai.Init(tickUnit, splitUnit, tickTown)
 			DisableTrigger(ai.trig.UnitLoop)
 
 			-- Enable Unit Route Management
-			DisableTrigger(ai.trig.UnitEntersRegion)
+			DisableTrigger(ai.trig.UnitEntersRoute)
 
 			return true
 		end
@@ -145,13 +160,13 @@ function ai.town.Init()
 			hostileForce = nil,
 
 			-- States
-			state = "Auto",
-			stateCurrent = "Relaxing",
-			states = {"Relax", "Relaxing", "Warn", "Warning", "Alert", "Alerting", "Pause", "Paused"},
+			state = "Relaxing",
+			states = {"Relax", "Relaxing", "Caution", "Cautioning", "Alert", "Alerting", "Pause", "Pausing"},
 
 			-- Units
 			units = CreateGroup(),
 			unitCount = 0,
+			unitEnemies = 0,
 
 			-- AI Activity Probability
 			activityProbability = activityProbability,
@@ -166,6 +181,12 @@ function ai.town.Init()
 			region = CreateRegion(),
 			rects = {}
 		}
+
+		-- Add region Key to the Database
+		ai.townRegions[GetHandleId(ai.town[name].region)] = name
+
+		-- Add event to the town entering
+		TriggerRegisterEnterRegionSimple(ai.trig.UnitEntersTown, ai.town[name].region)
 
 		return true
 	end
@@ -189,7 +210,7 @@ function ai.town.Init()
 
 		if TableContains(ai.town[town].states, state) then
 			ai.town[town].state = state
-			ai.town[town].stateCurrent = state
+			ai.town[town].state = state
 
 			ai.townSTATE[state](town)
 
@@ -205,7 +226,7 @@ function ai.town.Init()
 	---@return boolean
 	function ai.town.HostileForce(town, force)
 
-		ai.town[town].force = force
+		ai.town[town].hostileForce = force
 		return true
 
 	end
@@ -321,7 +342,7 @@ function ai.region.Init()
 			RegionAddRect(ai.region[id].region, rect)
 
 			-- Add Event to AI Region Enter Trigger
-			TriggerRegisterEnterRegionSimple(ai.trig.UnitEntersRegion, ai.region[id].region)
+			TriggerRegisterEnterRegionSimple(ai.trig.UnitEntersRoute, ai.region[id].region)
 		end
 
 	end
@@ -555,7 +576,6 @@ function ai.unit.Init()
 			enemies = 0,
 			alertedAllies = 0,
 			shift = shift,
-			state = "Auto",
 			type = type,
 			regionId = nil,
 			walking = false,
@@ -581,7 +601,7 @@ function ai.unit.Init()
 			ai.unit[handleId].states = {
 				"Relax", "Relaxing", "Move", "Moving", "Sleep", "ReturnHome", "ReturningHome", "Wait", "Waiting"
 			}
-			ai.unit[handleId].stateCurrent = "Relax"
+			ai.unit[handleId].state = "Relax"
 
 		end
 
@@ -725,7 +745,7 @@ function ai.unit.Init()
 		local speed = step.speed or data.speedDefault
 
 		-- Set new Unit Step Info || Reset Action Number
-		ai.unit[data.id].stateCurrent = "Moving"
+		ai.unit[data.id].state = "Moving"
 		ai.unit[data.id].stepNumber = stepNumber
 		ai.unit[data.id].actionNumber = 0
 		ai.unit[data.id].regionId = step.regionId
@@ -780,14 +800,14 @@ function ai.unit.Init()
 		ai.unit[data.id].actionNumber = actionNumber
 
 		-- If current State is Moving
-		if data.stateCurrent == "Moving" then
+		if data.state == "Moving" then
 
 			-- Get Next Action
 			local step = ai.route[data.route].step[stepNumber]
 			local action = step.action[actionNumber]
 
 			-- Change State to "Waiting"
-			ai.unit[data.id].stateCurrent = "Waiting"
+			ai.unit[data.id].state = "Waiting"
 
 			if action.type == "action" then
 
@@ -822,27 +842,27 @@ function ai.unit.Init()
 
 				-- Change State to "Moving"
 				SetUnitAnimation(unit, oid.stop)
-				ai.unit[data.id].stateCurrent = "Moving"
+				ai.unit[data.id].state = "Moving"
 
 			elseif action.type == "trigger" then
 
 				-- Set Temp Global Data that needs to get passed to trigger
 				udg_AI_TriggeringUnit = unit
 				udg_AI_TriggeringId = data.id
-				udg_AI_TriggeringState = data.stateCurrent
+				udg_AI_TriggeringState = data.state
 				udg_AI_TriggeringRegion = step.rect
 				udg_AI_TriggeringRoute = data.route
 				udg_AI_TriggeringStep = data.stepNumber
 				udg_AI_TriggeringAction = data.actionNumber
 
-				ai.unit[data.id].stateCurrent = "Waiting"
+				ai.unit[data.id].state = "Waiting"
 
 				-- Run the trigger (Ignoring Conditions)
 				TriggerExecute(action.trigger)
 
-				while ai.unit[data.id].stateCurrent == "Waiting" do PolledWait(.5) end
+				while ai.unit[data.id].state == "Waiting" do PolledWait(.5) end
 
-				ai.unit[data.id].stateCurrent = "Moving"
+				ai.unit[data.id].state = "Moving"
 			end
 		end
 
@@ -947,6 +967,141 @@ function ai.unit.Init()
 	end
 end
 
+---Town States
+-- @section townStates
+
+---Town States Functions Init runs when ai.Init() is run
+---@see ai.Init
+---@return boolean
+function ai.townSTATE.Init()
+
+	---comment
+	---@param name any
+	---@return boolean
+	function ai.townSTATE.Relax(name)
+		local town = ai.town[name]
+
+		print(town.name .. " is Relaxing.")
+
+		ai.town[name].state = "Relaxing"
+		return true
+	end
+
+	---comment
+	---@param name any
+	---@return boolean
+	function ai.townSTATE.Caution(name)
+		local town = ai.town[name]
+
+		print(town.name .. " is under Caution.")
+
+		ai.town[name].state = "Cautioning"
+		return true
+	end
+
+	---comment
+	---@param name any
+	---@return boolean
+	function ai.townSTATE.Alert(name)
+		local town = ai.town[name]
+
+		print(town.name .. " is under Alert.")
+
+		ai.town[name].state = "Alerting"
+		return true
+	end
+
+	---comment
+	---@param name any
+	---@return boolean
+	function ai.townSTATE.Pause(name)
+		local town = ai.town[name]
+
+		ai.town[name].state = "Pausing"
+		return true
+	end
+
+	--- Town States Transient
+	-- @section townStatesTransient
+
+	---comment
+	---@param name any
+	---@return boolean
+	function ai.townSTATE.Relaxing(name)
+		print("Relaxing")
+		return true
+	end
+
+	---comment
+	---@param name any
+	---@return boolean
+	function ai.townSTATE.Cautioning(name)
+		local town = ai.town[name]
+
+		print("Cautioning")
+
+		if town.unitEnemies > 10 then
+			ai.town.State(name, "Alert")
+		elseif town.unitEnemies == 0 then
+			ai.town.State(name, "Relax")
+		end
+
+		return true
+	end
+
+	---comment
+	---@param name any
+	---@return boolean
+	function ai.townSTATE.Alerting(name)
+		local town = ai.town[name]
+
+		print("Alerting")
+
+		if town.unitEnemies <= 10 then
+			ai.town.State(name, "Caution")
+		elseif town.unitEnemies == 0 then
+			ai.town.State(name, "Relax")
+		end
+
+		return true
+	end
+
+	---comment
+	---@param name any
+	---@return boolean
+	function ai.townSTATE.Pausing(name)
+
+		print("Pausing")
+
+		return true
+	end
+
+end
+
+---Landmark States
+-- @section landmarkStates
+
+---Landmark States Functions Init runs when ai.Init() is run
+---@see ai.Init
+---@return boolean
+function ai.landmarkSTATE.Init()
+
+	---comment
+	---@param name any
+	---@return boolean
+	function ai.landmarkSTATE.Relax(name) return true end
+
+	--- Landmark States Transient
+	-- @section landmarkStatesTransient
+
+	---comment
+	---@param name any
+	---@return boolean
+	function ai.landmarkSTATE.Relaxing(name) return true end
+
+	return true
+end
+
 ---Unit States
 -- @section unitStates
 
@@ -981,7 +1136,7 @@ function ai.unitSTATE.Init()
 		local data = ai.unit[GetHandleId(unit)]
 
 		-- Set state to Relaxing, then do nothing
-		ai.unit[data.id].stateCurrent = "Relaxing"
+		ai.unit[data.id].state = "Relaxing"
 
 		return true
 	end
@@ -993,7 +1148,7 @@ function ai.unitSTATE.Init()
 		local data = ai.unit[GetHandleId(unit)]
 
 		-- Set state to waiting, then do nothing
-		ai.unit[data.id].stateCurrent = "Waiting"
+		ai.unit[data.id].state = "Waiting"
 
 		return true
 	end
@@ -1004,7 +1159,7 @@ function ai.unitSTATE.Init()
 	function ai.unitSTATE.ReturnHome(unit)
 		local data = ai.unit[GetHandleId(unit)]
 
-		ai.unit[data.id].stateCurrent = "ReturningHome"
+		ai.unit[data.id].state = "ReturningHome"
 		ai.unit[data.id].route = nil
 		ai.unit[data.id].stepNumber = 0
 		ai.unit[data.id].actionNumber = 0
@@ -1055,7 +1210,7 @@ function ai.unitSTATE.Init()
 				IssuePointOrderById(unit, oid.move, data.xHome, data.yHome)
 
 			else
-				ai.unit[data.id].stateCurrent = "Relax"
+				ai.unit[data.id].state = "Relax"
 				local xNew, yNew = PolarProjectionCoordinates(x, y, 10, data.facingHome)
 				IssuePointOrderById(unit, oid.move, xNew, yNew)
 			end
@@ -1078,7 +1233,6 @@ function ai.unitSTATE.Init()
 			if TableContains(data.states, "Move") then ai.unit.State(unit, "Move") end
 
 		end
-	
 
 		return true
 	end
@@ -1094,27 +1248,50 @@ end
 function ai.intel.Init()
 
 	---Intelligence for Town Pre State Check
-	---@param town any
+	---@param name any
 	---@return boolean
-	function ai.intel.TownPre(town)
+	function ai.intel.TownPre(name)
+		Debugfunc(function()
 
-		town = ai.town[town]
+			local town = ai.town[name]
 
-		if town.hostileForce ~= nil and town.stateCurrent ~= "Paused" then
-			local u
+			if town.hostileForce ~= nil and (town.state == "Alerting" or town.state == "Cautioning") then
+				local u
 
-			local g = CreateGroup()
-			local g2 = CreateGroup()
+				print("Looking Hard")
 
-			-- Get all Units in the groups
-			for i = 1, #town.rects, 1 do
-				g2 = GetUnitsInRectAll(town.rects[i])
-				GroupAddGroup(g, g2)
-				DestroyGroup(g2)
+				local g = CreateGroup()
+				local g2 = CreateGroup()
+
+				local enemies = 0
+
+				-- Get all Units in the groups
+				for i = 1, #town.rects, 1 do
+					g2 = GetUnitsInRectAll(town.rects[i])
+					GroupAddGroup(g, g2)
+					DestroyGroup(g2)
+				end
+
+				print("Units: " .. CountUnitsInGroup(g))
+
+				-- Find all enemies in the Unit group
+				u = FirstOfGroup(g)
+				while u ~= nil do
+
+					if IsUnitInForce(town.hostileForce) then enemies = enemies + 1 end
+
+					GroupRemoveUnit(u)
+					u = FirstOfGroup(g)
+				end
+				DestroyGroup(g)
+
+				-- Update Town Info
+				ai.town[name].unitEnemies = enemies
+
+				print(enemies)
 			end
 
-		end
-
+		end, "Town Pre")
 		return true
 	end
 
@@ -1137,7 +1314,7 @@ function ai.intel.Init()
 		local l = GetUnitLoc(unit)
 
 		-- Find out if enemies are around if the Town is issueing a warning
-		if ai.town[data.town].stateCurrent == "Warning" then
+		if ai.town[data.town].state == "Warning" then
 			g = GetUnitsInRangeOfLocAll(data.radius, l)
 
 			u = FirstOfGroup(g)
@@ -1227,7 +1404,7 @@ function ai.trig.Init()
 
 			-- Run the routine for the unit's current state
 			ai.intel.UnitPre(u)
-			ai.unit.State(u, data.stateCurrent)
+			ai.unit.State(u, data.state)
 			ai.intel.UnitPost(u)
 
 			GroupRemoveUnit(ai.unitGroupTick, u)
@@ -1239,9 +1416,9 @@ function ai.trig.Init()
 	--
 
 	--- Trigger Unit enters a Rect in a Route
-	ai.trig.UnitEntersRegion = CreateTrigger()
-	DisableTrigger(ai.trig.UnitEntersRegion)
-	TriggerAddAction(ai.trig.UnitEntersRegion, function()
+	ai.trig.UnitEntersRoute = CreateTrigger()
+	DisableTrigger(ai.trig.UnitEntersRoute)
+	TriggerAddAction(ai.trig.UnitEntersRoute, function()
 
 		local unit = GetEnteringUnit()
 		local region = GetTriggeringRegion()
@@ -1266,6 +1443,36 @@ function ai.trig.Init()
 			end
 		end, "Loop")
 		return false
+	end)
+
+	--
+	--  Unit Enters Town Region
+	--
+
+	--- Trigger Unit enters Town
+	ai.trig.UnitEntersTown = CreateTrigger()
+	DisableTrigger(ai.trig.UnitEntersTown)
+	TriggerAddAction(ai.trig.UnitEntersTown, function()
+
+		Debugfunc(function()
+			local enteringRegion = GetTriggeringRegion()
+			local id = GetHandleId(enteringRegion)
+
+			print("Entering")
+			PingMinimap(GetUnitX(GetEnteringUnit()), GetUnitY(GetEnteringUnit()), 6)
+			if ai.townRegions[id] ~= nil then
+				local enteringUnit = GetEnteringUnit()
+				local townName = ai.townRegions[id]
+				local town = ai.town[townName]
+
+				if IsUnitInForce(enteringUnit, town.hostileForce) and town.state == "Relaxing" then
+					ai.town.State(townName, "Caution")
+					print("BAD GUY")
+				end
+			end
+
+		end, "Town Loop")
+		return true
 	end)
 end
 
