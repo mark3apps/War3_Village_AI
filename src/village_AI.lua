@@ -1,5 +1,4 @@
 ---This Contains all of the Functions that you'll need to run and set up the AI.  Most of the functions won't need to be used.  As they're used for internal purposes.
----@diagnostic disable: lowercase-global
 ---@author Mark Wright (KickKing)
 ai = {landmark = {}, town = {}, region = {}, route = {}, unit = {}, unitSTATE = {}, intel = {}, trig = {}}
 
