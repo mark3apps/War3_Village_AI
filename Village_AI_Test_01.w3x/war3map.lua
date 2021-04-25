@@ -61,13 +61,13 @@ function InitGlobals()
     udg_AI_TriggeringId = 0
 end
 
----This Contains all of the Functions that you'll need to run and set up the AI.  Most of the functions won't need to be used.  as they're used for internal purposes.
+---This Contains all of the Functions that you'll need to run and set up the AI.  Most of the functions won't need to be used.  As they're used for internal purposes.
 ---@diagnostic disable: lowercase-global
----@author KickKing
+---@author Mark Wright (KickKing)
 blank = nil
 
 ---This Table contains all of the functions and data for the Village
----@table ai Contains all of the Towns
+---@table ai
 -- @field town All of the town Functions and Variables
 -- @field townNames All of the Town Names
 -- @field unit All of the Unit Functions and variables
@@ -88,7 +88,7 @@ ai = {
 	unitGroup = CreateGroup()
 }
 
----This is the first command that need to be run before anything else.  Initializes everything that's needed.
+--- Test Pull This is the first command that need to be run before anything else.  Initializes everything that's needed.
 ---@param overallTick number    OPTIONAL 2 | The interval at which each unit added to AI will update it's intelligence and make decisions   
 ---@param overallSplit number   OPTIONAL 5 | The amount of splits that the Ticks will process Unit intelligence at.  1 means all AI ticks will be processed at the same time, 3 means processing will be split into 3 groups.
 function ai.Init(overallTick, overallSplit)
@@ -317,7 +317,7 @@ function ai.Init(overallTick, overallSplit)
 	-- @section Region
 	--
 
-	---Set up a new region (Internal Function)
+	---Set up a new region (Internal Function, Don't need to use)
 	---@param rect any
 	function ai.region.New(rect)
 
@@ -348,7 +348,7 @@ function ai.Init(overallTick, overallSplit)
 	---@param id number Handle Id of soure Rect
 	---@return number x
 	---@return number y
-	function ai.region.GetRandom(id)
+	function ai.region.GetRandomCoordinates(id)
 		local data = ai.region[id]
 
 		return GetRandomReal(data.xMin, data.xMax), GetRandomReal(data.yMin, data.yMax)
@@ -358,7 +358,7 @@ function ai.Init(overallTick, overallSplit)
 	---@param id number Handle Id of soure Rect
 	---@return number x
 	---@return number y
-	function ai.region.GetCenter(id) return ai.region[id].x, ai.region[id].y end
+	function ai.region.GetCenterCoordinates(id) return ai.region[id].x, ai.region[id].y end
 
 	---Check to see if region contains a unit
 	---@param id number Handle Id of soure Rect
@@ -534,7 +534,6 @@ function ai.Init(overallTick, overallSplit)
 	---@param shift string OPTIONAL | "day" | ["day", "night", "all"] Specifies when the unit will be active
 	---@param radius number OPTIONAL | 600 | Specifies the units vision radius it uses to detect actions.
 	---@return boolean
-	---@see states
 	function ai.unit.New(town, type, unit, name, shift, radius)
 
 		shift = shift or "day"
@@ -588,7 +587,7 @@ function ai.Init(overallTick, overallSplit)
 		}
 
 		if type == "villager" then
-			ai.unit[handleId].states = {"Relax", "Move", "Sleep", "ReturnHome", "Moving", "ReturningHome", "Waiting"}
+			ai.unit[handleId].states = {"Relax", "Relaxing", "Move", "Moving", "Sleep", "ReturnHome", "ReturningHome", "Wait", "Waiting"}
 			ai.unit[handleId].stateCurrent = "Relax"
 
 		end
@@ -690,7 +689,7 @@ function ai.Init(overallTick, overallSplit)
 				local regionX, regionY
 
 				for i = 1, routeData.stepCount do
-					regionX, regionY = ai.region.GetCenter(routeData.step[i].regionId)
+					regionX, regionY = ai.region.GetCenterCoordinates(routeData.step[i].regionId)
 
 					newDistance = DistanceBetweenCoordinates(x, y, regionX, regionY)
 
@@ -741,9 +740,9 @@ function ai.Init(overallTick, overallSplit)
 
 		-- Get new Destination for unit
 		if step.point == "random" then
-			ai.unit[data.id].xDest, ai.unit[data.id].yDest = ai.region.GetRandom(step.regionId)
+			ai.unit[data.id].xDest, ai.unit[data.id].yDest = ai.region.GetRandomCoordinates(step.regionId)
 		else
-			ai.unit[data.id].xDest, ai.unit[data.id].yDest = ai.region.GetCenter(step.regionId)
+			ai.unit[data.id].xDest, ai.unit[data.id].yDest = ai.region.GetCenterCoordinates(step.regionId)
 		end
 
 		-- Set whether unit should run or walk.
@@ -859,7 +858,7 @@ function ai.Init(overallTick, overallSplit)
 
 	--- Set the Unit State
 	---Set the Unit's Current state (This is an active step that will change the state and run a set of commands for that state)
-	---Current list of states are {"Move", "Relax", "ReturnHome"}
+	---Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}
 	---@param unit any
 	---@param state string
 	---@return boolean
@@ -1004,15 +1003,18 @@ function ai.Init(overallTick, overallSplit)
 	---Unit States
 	-- @section unitStates
 
-	---This runs when a unit's state is changed to Move.  Will pick a route from the units available routes and send them on the quest
+	---Will pick a route from the units available routes or specified route and send them on the quest
 	---@param unit any
+	---@param route any @OPTIONAL | Random route picked from units routes | This is the route that the specified unit will go on.
 	---@return boolean
-	function ai.unitSTATE.Move(unit)
+	function ai.unitSTATE.Move(unit, route)
+
 		local data = ai.unit[GetHandleId(unit)]
 
 		if #data.routes == 0 and data.route == nil then return false end
 
-		local route = data.routes[GetRandomInt(1, #data.routes)]
+		-- Pick a Route if one doesn't Exist
+		if route == nil then route = data.routes[GetRandomInt(1, #data.routes)] end
 
 		ai.unit.PickRoute(unit)
 		ai.unit.MoveToNextStep(unit)
@@ -1020,23 +1022,31 @@ function ai.Init(overallTick, overallSplit)
 		return true
 	end
 
-	---This runs when a unit's state is changed to Relax.  Unit is not moving or doing anything.  Just standing.  At unit's tick, has a chance to tell the unit to go into another state.
+	---Same as Wait but will periodically transition to other states based on the town activitiy probability  Currently transitions to "Moving"
 	---@param unit any
+	---@return boolean
 	function ai.unitSTATE.Relax(unit)
 		local data = ai.unit[GetHandleId(unit)]
 
-		local prob = GetRandomInt(1, 100)
+		-- Set state to Relaxing, then do nothing
+		ai.unit[data.id].stateCurrent = "Relaxing"
 
-		if ai.town[data.town].activityProbability >= prob then
-
-			-- Order Unit to Move onto one of it's routes
-			if TableContains(data.states, "Move") then ai.unit.State(unit, "Move") end
-
-		end
-
+		return true
 	end
 
-	---This runs when a Unit's state is changed to ReturnHome.  The unit will stop what it's doing, clear out it's current route and begin to walk back to it's home position and facing angle
+	---Will not change state unless Prompted, shift change or Sensing danger
+	---@param unit any
+	---@return boolean
+	function ai.unitSTATE.Wait(unit)
+		local data = ai.unit[GetHandleId(unit)]
+
+		-- Set state to waiting, then do nothing
+		ai.unit[data.id].stateCurrent = "Waiting"
+
+		return true
+	end
+
+	---The unit will stop what it's doing, clear out it's current route and begin to walk back to it's home position and facing angle
 	---@param unit any
 	---@return boolean
 	function ai.unitSTATE.ReturnHome(unit)
@@ -1055,11 +1065,11 @@ function ai.Init(overallTick, overallSplit)
 		return true
 	end
 
-	---Unit States Transient
-	-- @section unitStates Transient
-	--
+	--- Unit States Transient.
+	-- These states are never set manually.  Only ever set units to have full states.
+	-- @section unitStates
 
-	---This is an inbetween state.  Don't manually set it's state to this.
+	---Unit will check to see if it's walking if not, then it will move to it's next order
 	---@param unit any
 	---@return boolean
 	function ai.unitSTATE.Moving(unit)
@@ -1097,6 +1107,24 @@ function ai.Init(overallTick, overallSplit)
 				local xNew, yNew = PolarProjectionCoordinates(x, y, 10, data.facingHome)
 				IssuePointOrderById(unit, oid.move, xNew, yNew)
 			end
+		end
+
+		return true
+	end
+
+	---This runs when a unit's state is changed to Relax.  Unit is not moving or doing anything.  Just standing.  At unit's tick, has a chance to tell the unit to go into another state.
+	---@param unit any
+	---@return boolean
+	function ai.unitSTATE.Relaxing(unit)
+		local data = ai.unit[GetHandleId(unit)]
+
+		local prob = GetRandomInt(1, 100)
+
+		if ai.town[data.town].activityProbability >= prob then
+
+			-- Order Unit to Move onto one of it's routes
+			if TableContains(data.states, "Move") then ai.unit.State(unit, "Move") end
+
 		end
 
 		return true

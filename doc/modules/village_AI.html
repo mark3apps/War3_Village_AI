@@ -132,11 +132,11 @@
 	<td class="summary">Set up a new region (Internal Function, Don't need to use)</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#ai.region.GetRandom">ai.region.GetRandom (id)</a></td>
+	<td class="name" nowrap><a href="#ai.region.GetRandomCoordinates">ai.region.GetRandomCoordinates (id)</a></td>
 	<td class="summary">Get Random point in the specified region.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#ai.region.GetCenter">ai.region.GetCenter (id)</a></td>
+	<td class="name" nowrap><a href="#ai.region.GetCenterCoordinates">ai.region.GetCenterCoordinates (id)</a></td>
 	<td class="summary">Get Center point in the specified region</td>
 	</tr>
 	<tr>
@@ -227,7 +227,7 @@ Run the Next Action in the Units Current Step in its current Route</td>
 
 Set the Unit's Current state (This is an active step that will change the state and run a set of commands for that state)
 
-Current list of states are {"Move", "Relax", "ReturnHome"}</td>
+Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.unit.IntelPre">ai.unit.IntelPre (unit)</a></td>
@@ -245,23 +245,27 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
 <h2><a href="#Unit_States">Unit States </a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#ai.unitSTATE.Move">ai.unitSTATE.Move (unit)</a></td>
-	<td class="summary">This runs when a unit's state is changed to Move.</td>
+	<td class="name" nowrap><a href="#ai.unitSTATE.Move">ai.unitSTATE.Move (unit, route)</a></td>
+	<td class="summary">Will pick a route from the units available routes or specified route and send them on the quest</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.unitSTATE.Relax">ai.unitSTATE.Relax (unit)</a></td>
-	<td class="summary">This runs when a unit's state is changed to Relax.</td>
+	<td class="summary">Same as Wait but will periodically transition to other states based on the town activitiy probability  Currently transitions to "Moving"</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.Wait">ai.unitSTATE.Wait (unit)</a></td>
+	<td class="summary">Will not change state unless Prompted, shift change or Sensing danger</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.unitSTATE.ReturnHome">ai.unitSTATE.ReturnHome (unit)</a></td>
-	<td class="summary">This runs when a Unit's state is changed to ReturnHome.</td>
+	<td class="summary">The unit will stop what it's doing, clear out it's current route and begin to walk back to it's home position and facing angle</td>
 	</tr>
 </table>
 <h2><a href="#Unit_States_Transient">Unit States Transient </a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#ai.unitSTATE.Moving">ai.unitSTATE.Moving (unit)</a></td>
-	<td class="summary">This is an inbetween state.</td>
+	<td class="summary">Unit will check to see if it's walking if not, then it will move to it's next order</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.unitSTATE.Waiting">ai.unitSTATE.Waiting (unit)</a></td>
@@ -270,6 +274,10 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
 	<tr>
 	<td class="name" nowrap><a href="#ai.unitSTATE.ReturningHome">ai.unitSTATE.ReturningHome (unit)</a></td>
 	<td class="summary">This is an inbetween state.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.Relaxing">ai.unitSTATE.Relaxing (unit)</a></td>
+	<td class="summary">This runs when a unit's state is changed to Relax.</td>
 	</tr>
 </table>
 <h2><a href="#AI_Control">AI Control </a></h2>
@@ -672,8 +680,8 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
 
 </dd>
     <dt>
-    <a name = "ai.region.GetRandom"></a>
-    <strong>ai.region.GetRandom (id)</strong>
+    <a name = "ai.region.GetRandomCoordinates"></a>
+    <strong>ai.region.GetRandomCoordinates (id)</strong>
     </dt>
     <dd>
     Get Random point in the specified region.
@@ -699,8 +707,8 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
 
 </dd>
     <dt>
-    <a name = "ai.region.GetCenter"></a>
-    <strong>ai.region.GetCenter (id)</strong>
+    <a name = "ai.region.GetCenterCoordinates"></a>
+    <strong>ai.region.GetCenterCoordinates (id)</strong>
     </dt>
     <dd>
     Get Center point in the specified region
@@ -1247,7 +1255,7 @@ Run the Next Action in the Units Current Step in its current Route
 
 Set the Unit's Current state (This is an active step that will change the state and run a set of commands for that state)
 
-Current list of states are {"Move", "Relax", "ReturnHome"}
+Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}
 
 
     <h3>Parameters:</h3>
@@ -1349,11 +1357,38 @@ Current list of states are {"Move", "Relax", "ReturnHome"}
     <dl class="function">
     <dt>
     <a name = "ai.unitSTATE.Move"></a>
-    <strong>ai.unitSTATE.Move (unit)</strong>
+    <strong>ai.unitSTATE.Move (unit, route)</strong>
     </dt>
     <dd>
-    This runs when a unit's state is changed to Move.   Will pick a route from the units available routes and send them on the quest
+    Will pick a route from the units available routes or specified route and send them on the quest
 
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+        <li><span class="parameter">route</span>
+         any @OPTIONAL | Random route picked from units routes | This is the route that the specified unit will go on.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unitSTATE.Relax"></a>
+    <strong>ai.unitSTATE.Relax (unit)</strong>
+    </dt>
+    <dd>
+    Same as Wait but will periodically transition to other states based on the town activitiy probability  Currently transitions to "Moving"
 
 
     <h3>Parameters:</h3>
@@ -1374,12 +1409,11 @@ Current list of states are {"Move", "Relax", "ReturnHome"}
 
 </dd>
     <dt>
-    <a name = "ai.unitSTATE.Relax"></a>
-    <strong>ai.unitSTATE.Relax (unit)</strong>
+    <a name = "ai.unitSTATE.Wait"></a>
+    <strong>ai.unitSTATE.Wait (unit)</strong>
     </dt>
     <dd>
-    This runs when a unit's state is changed to Relax.   Unit is not moving or doing anything.  Just standing.  At unit's tick, has a chance to tell the unit to go into another state.
-
+    Will not change state unless Prompted, shift change or Sensing danger
 
 
     <h3>Parameters:</h3>
@@ -1389,6 +1423,11 @@ Current list of states are {"Move", "Relax", "ReturnHome"}
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
 
 
 
@@ -1399,8 +1438,7 @@ Current list of states are {"Move", "Relax", "ReturnHome"}
     <strong>ai.unitSTATE.ReturnHome (unit)</strong>
     </dt>
     <dd>
-    This runs when a Unit's state is changed to ReturnHome.   The unit will stop what it's doing, clear out it's current route and begin to walk back to it's home position and facing angle
-
+    The unit will stop what it's doing, clear out it's current route and begin to walk back to it's home position and facing angle
 
 
     <h3>Parameters:</h3>
@@ -1421,16 +1459,21 @@ Current list of states are {"Move", "Relax", "ReturnHome"}
 
 </dd>
 </dl>
-    <h2 class="section-header "><a name="Unit_States_Transient"></a>Unit States Transient </h2>
+    <h2 class="section-header has-description"><a name="Unit_States_Transient"></a>Unit States Transient </h2>
 
+          <div class="section-description">
+
+
+ These states are never set manually.  Only ever set units to have full states.
+
+          </div>
     <dl class="function">
     <dt>
     <a name = "ai.unitSTATE.Moving"></a>
     <strong>ai.unitSTATE.Moving (unit)</strong>
     </dt>
     <dd>
-    This is an inbetween state.   Don't manually set it's state to this.
-
+    Unit will check to see if it's walking if not, then it will move to it's next order
 
 
     <h3>Parameters:</h3>
@@ -1502,6 +1545,32 @@ Current list of states are {"Move", "Relax", "ReturnHome"}
 
 
 </dd>
+    <dt>
+    <a name = "ai.unitSTATE.Relaxing"></a>
+    <strong>ai.unitSTATE.Relaxing (unit)</strong>
+    </dt>
+    <dd>
+    This runs when a unit's state is changed to Relax.   Unit is not moving or doing anything.  Just standing.  At unit's tick, has a chance to tell the unit to go into another state.
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
 </dl>
     <h2 class="section-header "><a name="AI_Control"></a>AI Control </h2>
 
@@ -1551,7 +1620,7 @@ Current list of states are {"Move", "Relax", "ReturnHome"}
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2021-04-21 22:53:39 </i>
+<i style="float:right;">Last updated 2021-04-24 18:01:31 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
