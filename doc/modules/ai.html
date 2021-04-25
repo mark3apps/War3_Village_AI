@@ -1,0 +1,1935 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Initialization">Initialization </a></li>
+<li><a href="#Landmark_Actions">Landmark Actions </a></li>
+<li><a href="#Town_Actions">Town Actions </a></li>
+<li><a href="#Region_Actions">Region Actions </a></li>
+<li><a href="#Route_Actions">Route Actions </a></li>
+<li><a href="#Unit_Actions">Unit Actions </a></li>
+<li><a href="#Unit_States">Unit States </a></li>
+<li><a href="#Unit_States_Transient">Unit States Transient </a></li>
+<li><a href="#Intel_Checks">Intel Checks </a></li>
+<li><a href="#Triggers">Triggers </a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><strong>ai</strong></li>
+  <li><a href="../modules/functions.html">functions</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>ai</code></h1>
+<p>This Contains all of the Functions that you'll need to run and set up the AI.</p>
+<p>  Most of the functions won't need to be used.  As they're used for internal purposes.
+</p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Author</strong>: Mark Wright (KickKing)</li>
+    </ul>
+
+
+<h2><a href="#Initialization">Initialization </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Init">Init (tickUnit, splitUnit, tickTown)</a></td>
+	<td class="summary">This Initialized everything needed to run Village AI.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Start">Start ()</a></td>
+	<td class="summary">Start Running the AI</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Stop">Stop ()</a></td>
+	<td class="summary">Stop Running the AI</td>
+	</tr>
+</table>
+<h2><a href="#Landmark_Actions">Landmark Actions </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#ai.landmark.Init">ai.landmark.Init ()</a></td>
+	<td class="summary">Landmark Init runs when ai.Init() is run</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.landmark.New">ai.landmark.New (town, name, rect, types, unit, radius, maxCapacity)</a></td>
+	<td class="summary">Creates a New Landmark and Adds it.</td>
+	</tr>
+</table>
+<h2><a href="#Town_Actions">Town Actions </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#ai.town.Init">ai.town.Init ()</a></td>
+	<td class="summary">Town Functions Init runs when ai.Init() is run</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.town.New">ai.town.New (name, activityProbability)</a></td>
+	<td class="summary">Adds a new town to the map.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.town.Extend">ai.town.Extend (name, rect)</a></td>
+	<td class="summary">Extend the town coverage to include the region</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.town.State">ai.town.State (town, state)</a></td>
+	<td class="summary">Change the State of the Town.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.town.HostileForce">ai.town.HostileForce (town, force)</a></td>
+	<td class="summary">Sets the Hostile force for the selected town</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.town.VulnerableUnits">ai.town.VulnerableUnits (town, flag)</a></td>
+	<td class="summary">Sets All units to be Vulnerable / Invulnerable in the selected town</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.town.UnitsSetRoute">ai.town.UnitsSetRoute (town, route)</a></td>
+	<td class="summary">Sets the route for every unit in the selected town to the chosen route whether it's in their list of routes or not immediately</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.town.UnitsSetState">ai.town.UnitsSetState (town, state)</a></td>
+	<td class="summary">Sets All units in a town to the specified state</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.town.UnitsHurt">ai.town.UnitsHurt (town, low, high, kill)</a></td>
+	<td class="summary">Hurt all units in the town by a random percent of their health from the low number to the high number, If kill is false, units won't be killed by this, but their health will be set to 1 percent</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.town.UnitsSetLife">ai.town.UnitsSetLife (town, low, high)</a></td>
+	<td class="summary">Set the life of all units in a town to a random percent from low to high.</td>
+	</tr>
+</table>
+<h2><a href="#Region_Actions">Region Actions </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#ai.region.Init">ai.region.Init ()</a></td>
+	<td class="summary">Region Functions Init runs when ai.Init() is run</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.region.New">ai.region.New (rect)</a></td>
+	<td class="summary">Set up a new region (Internal Function, Don't need to use)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.region.GetRandomCoordinates">ai.region.GetRandomCoordinates (id)</a></td>
+	<td class="summary">Get Random point in the specified region.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.region.GetCenterCoordinates">ai.region.GetCenterCoordinates (id)</a></td>
+	<td class="summary">Get Center point in the specified region</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.region.ContainsUnit">ai.region.ContainsUnit (id, unit)</a></td>
+	<td class="summary">Check to see if region contains a unit</td>
+	</tr>
+</table>
+<h2><a href="#Route_Actions">Route Actions </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#ai.route.Init">ai.route.Init ()</a></td>
+	<td class="summary">Route Functions Init runs when ai.Init() is run</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.route.New">ai.route.New (name, loop)</a></td>
+	<td class="summary">Creates a new route that villagers can take when Moving.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.route.Step">ai.route.Step (rect, speed, point, order, animationTag)</a></td>
+	<td class="summary">Adds at the end of the selected route, a new place for a unit to move to.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.route.Action">ai.route.Action (time, lookAtRect, animation, loop)</a></td>
+	<td class="summary">Adds an additional action to the picked route step  Applies to the latest defined Route</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.route.Trigger">ai.route.Trigger (trigger)</a></td>
+	<td class="summary">Add a trigger to the step as the next action.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.route.Funct">ai.route.Funct (funct)</a></td>
+	<td class="summary">Adds a Function to the Route (NOT FINISHED)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.route.Finish">ai.route.Finish (speed)</a></td>
+	<td class="summary">Finish out the route and specify the speed at which units should use to go back to their home positions</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.route.StepCount">ai.route.StepCount (route)</a></td>
+	<td class="summary">Get the Count of steps in a route</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.route.ActionCount">ai.route.ActionCount (route, step)</a></td>
+	<td class="summary">Get the Count of Actions in a Step</td>
+	</tr>
+</table>
+<h2><a href="#Unit_Actions">Unit Actions </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.Init">ai.unit.Init ()</a></td>
+	<td class="summary">Unit Functions Init runs when ai.Init() is run</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.New">ai.unit.New (town, type, unit, name, shift, radius)</a></td>
+	<td class="summary">Adds a unit that exists into the fold to be controlled by the AI.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.AddRoute">ai.unit.AddRoute (unit, route)</a></td>
+	<td class="summary">Adds a route to a unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.RemoveRoute">ai.unit.RemoveRoute (unit, route)</a></td>
+	<td class="summary">Removes the route from the units list of routes</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.Kill">ai.unit.Kill (unit)</a></td>
+	<td class="summary">Kills the Unit and removes it from AI</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.Remove">ai.unit.Remove (unit)</a></td>
+	<td class="summary">Remove the Unit from the AI (Unit will be controlled as if it was an ordinary Unit)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.Pause">ai.unit.Pause (unit, flag)</a></td>
+	<td class="summary">Pause the Unit</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.PickRoute">ai.unit.PickRoute (unit, route, stepNumber, actionNumber)</a></td>
+	<td class="summary">Pick a Route from the Units avalable routes and set it up (Unit will not start moving down the route, this ONLY gets it ready to)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.NextStep">ai.unit.NextStep (unit)</a></td>
+	<td class="summary">Run next Step in a Units Current Route
+
+Run the next Step in the Unit's current Route</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.NextAction">ai.unit.NextAction (unit)</a></td>
+	<td class="summary">Run the units next Route Action
+
+Run the Next Action in the Units Current Step in its current Route</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.State">ai.unit.State (unit, state)</a></td>
+	<td class="summary">Set the Unit State
+
+Set the Unit's Current state (This is an active step that will change the state and run a set of commands for that state)
+
+Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.MoveToNextStep">ai.unit.MoveToNextStep (unit, immediately)</a></td>
+	<td class="summary">Goes to either the Units next Step, Action or Ends the route  (Use this in GUI 99% of the time)</td>
+	</tr>
+</table>
+<h2><a href="#Unit_States">Unit States </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.Init">ai.unitSTATE.Init ()</a></td>
+	<td class="summary">Unit States Functions Init runs when ai.Init() is run</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.Move">ai.unitSTATE.Move (unit, route)</a></td>
+	<td class="summary">Will pick a route from the units available routes or specified route and send them on the quest</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.Relax">ai.unitSTATE.Relax (unit)</a></td>
+	<td class="summary">Same as Wait but will periodically transition to other states based on the town activitiy probability  Currently transitions to "Moving"</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.Wait">ai.unitSTATE.Wait (unit)</a></td>
+	<td class="summary">Will not change state unless Prompted, shift change or Sensing danger</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.ReturnHome">ai.unitSTATE.ReturnHome (unit)</a></td>
+	<td class="summary">The unit will stop what it's doing, clear out it's current route and begin to walk back to it's home position and facing angle</td>
+	</tr>
+</table>
+<h2><a href="#Unit_States_Transient">Unit States Transient </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.Moving">ai.unitSTATE.Moving (unit)</a></td>
+	<td class="summary">Unit will check to see if it's walking if not, then it will move to it's next order</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.Waiting">ai.unitSTATE.Waiting (unit)</a></td>
+	<td class="summary">This is an inbetween state.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.ReturningHome">ai.unitSTATE.ReturningHome (unit)</a></td>
+	<td class="summary">This is an inbetween state.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.Relaxing">ai.unitSTATE.Relaxing (unit)</a></td>
+	<td class="summary">This runs when a unit's state is changed to Relax.</td>
+	</tr>
+</table>
+<h2><a href="#Intel_Checks">Intel Checks </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#ai.intel.Init">ai.intel.Init ()</a></td>
+	<td class="summary">Intel Functions Init runs when ai.Init() is run</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.intel.TownPre">ai.intel.TownPre (town)</a></td>
+	<td class="summary">Intelligence for Town Pre State Check</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.intel.TownPost">ai.intel.TownPost (town)</a></td>
+	<td class="summary">Intellince for town Post State Check</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.intel.UnitPre">ai.intel.UnitPre (unit)</a></td>
+	<td class="summary">Update the Units Intel (Will run automatically at the unit's tick)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.intel.UnitPost">ai.intel.UnitPost (unit)</a></td>
+	<td class="summary">Runs a post check of intel after all states and Intel have been gathered at the end of a unit's tick</td>
+	</tr>
+</table>
+<h2><a href="#Triggers">Triggers </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#ai.trig.Init">ai.trig.Init ()</a></td>
+	<td class="summary">Trigger Functions Init runs when ai.Init() is run</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.trig.TownLoop">ai.trig.TownLoop</a></td>
+	<td class="summary">Trigger to loop through towns and get unit info.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.trig.UnitLoop">ai.trig.UnitLoop</a></td>
+	<td class="summary">The Trigger that Loops through units to get Unit Intellegence</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.trig.UnitEntersRegion">ai.trig.UnitEntersRegion</a></td>
+	<td class="summary">Trigger Unit enters a Rect in a Route</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header has-description"><a name="Initialization"></a>Initialization </h2>
+
+          <div class="section-description">
+
+
+ Initialization of AI Villagers
+
+          </div>
+    <dl class="function">
+    <dt>
+    <a name = "Init"></a>
+    <strong>Init (tickUnit, splitUnit, tickTown)</strong>
+    </dt>
+    <dd>
+    This Initialized everything needed to run Village AI.  Run this before using any other functions in AI Villagers.
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">tickUnit</span>
+         number    OPTIONAL | 2 | The interval at which each unit added to AI will update it's intelligence and make decisions
+        </li>
+        <li><span class="parameter">splitUnit</span>
+         number   OPTIONAL | 5 | The amount of splits that the Ticks will process Unit intelligence at.  1 means all AI ticks will be processed at the same time, 3 means processing will be split into 3 groups.
+        </li>
+        <li><span class="parameter">tickTown</span>
+         number    OPTIONAL | 5 | The interval at which each Town added to AI will update it's intelligence and make decisions
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Start"></a>
+    <strong>Start ()</strong>
+    </dt>
+    <dd>
+    Start Running the AI
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Stop"></a>
+    <strong>Stop ()</strong>
+    </dt>
+    <dd>
+    Stop Running the AI
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Landmark_Actions"></a>Landmark Actions </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "ai.landmark.Init"></a>
+    <strong>ai.landmark.Init ()</strong>
+    </dt>
+    <dd>
+    Landmark Init runs when ai.Init() is run
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ai.html#Init">ai.Init</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "ai.landmark.New"></a>
+    <strong>ai.landmark.New (town, name, rect, types, unit, radius, maxCapacity)</strong>
+    </dt>
+    <dd>
+    Creates a New Landmark and Adds it.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         string
+        </li>
+        <li><span class="parameter">name</span>
+         string
+        </li>
+        <li><span class="parameter">rect</span>
+         table
+        </li>
+        <li><span class="parameter">types</span>
+         table
+        </li>
+        <li><span class="parameter">unit</span>
+         table OPTIONAL nil |
+        </li>
+        <li><span class="parameter">radius</span>
+         number OPTIONAL 600 |
+        </li>
+        <li><span class="parameter">maxCapacity</span>
+         number OPTIONAL Unlimited |
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Town_Actions"></a>Town Actions </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "ai.town.Init"></a>
+    <strong>ai.town.Init ()</strong>
+    </dt>
+    <dd>
+    Town Functions Init runs when ai.Init() is run
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ai.html#Init">ai.Init</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "ai.town.New"></a>
+    <strong>ai.town.New (name, activityProbability)</strong>
+    </dt>
+    <dd>
+    Adds a new town to the map.   (NEEDS to be extended with additional RECTs)
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+         string   This is the name of the town.  This is used to reference the town in other functions
+        </li>
+        <li><span class="parameter">activityProbability</span>
+         number Specifies the percentage chance that a unit will run down an activity per unit tick
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.town.Extend"></a>
+    <strong>ai.town.Extend (name, rect)</strong>
+    </dt>
+    <dd>
+    Extend the town coverage to include the region
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+         any
+        </li>
+        <li><span class="parameter">rect</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.town.State"></a>
+    <strong>ai.town.State (town, state)</strong>
+    </dt>
+    <dd>
+    Change the State of the Town.  (Currently doesn't do anything)
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         string
+        </li>
+        <li><span class="parameter">state</span>
+         string
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.town.HostileForce"></a>
+    <strong>ai.town.HostileForce (town, force)</strong>
+    </dt>
+    <dd>
+    Sets the Hostile force for the selected town
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         string
+        </li>
+        <li><span class="parameter">force</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.town.VulnerableUnits"></a>
+    <strong>ai.town.VulnerableUnits (town, flag)</strong>
+    </dt>
+    <dd>
+    Sets All units to be Vulnerable / Invulnerable in the selected town
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         string
+        </li>
+        <li><span class="parameter">flag</span>
+         boolean
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.town.UnitsSetRoute"></a>
+    <strong>ai.town.UnitsSetRoute (town, route)</strong>
+    </dt>
+    <dd>
+    Sets the route for every unit in the selected town to the chosen route whether it's in their list of routes or not immediately
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         string
+        </li>
+        <li><span class="parameter">route</span>
+         string
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.town.UnitsSetState"></a>
+    <strong>ai.town.UnitsSetState (town, state)</strong>
+    </dt>
+    <dd>
+    Sets All units in a town to the specified state
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         any
+        </li>
+        <li><span class="parameter">state</span>
+         any
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.town.UnitsHurt"></a>
+    <strong>ai.town.UnitsHurt (town, low, high, kill)</strong>
+    </dt>
+    <dd>
+    Hurt all units in the town by a random percent of their health from the low number to the high number, If kill is false, units won't be killed by this, but their health will be set to 1 percent
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         string
+        </li>
+        <li><span class="parameter">low</span>
+         number
+        </li>
+        <li><span class="parameter">high</span>
+         number
+        </li>
+        <li><span class="parameter">kill</span>
+         boolean
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.town.UnitsSetLife"></a>
+    <strong>ai.town.UnitsSetLife (town, low, high)</strong>
+    </dt>
+    <dd>
+    Set the life of all units in a town to a random percent from low to high.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         string
+        </li>
+        <li><span class="parameter">low</span>
+         number
+        </li>
+        <li><span class="parameter">high</span>
+         number
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Region_Actions"></a>Region Actions </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "ai.region.Init"></a>
+    <strong>ai.region.Init ()</strong>
+    </dt>
+    <dd>
+    Region Functions Init runs when ai.Init() is run
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ai.html#Init">ai.Init</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "ai.region.New"></a>
+    <strong>ai.region.New (rect)</strong>
+    </dt>
+    <dd>
+    Set up a new region (Internal Function, Don't need to use)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">rect</span>
+         any
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.region.GetRandomCoordinates"></a>
+    <strong>ai.region.GetRandomCoordinates (id)</strong>
+    </dt>
+    <dd>
+    Get Random point in the specified region.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+         number Handle Id of soure Rect
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        number x</li>
+        <li>
+        number y</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.region.GetCenterCoordinates"></a>
+    <strong>ai.region.GetCenterCoordinates (id)</strong>
+    </dt>
+    <dd>
+    Get Center point in the specified region
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+         number Handle Id of soure Rect
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        number x</li>
+        <li>
+        number y</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.region.ContainsUnit"></a>
+    <strong>ai.region.ContainsUnit (id, unit)</strong>
+    </dt>
+    <dd>
+    Check to see if region contains a unit
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+         number Handle Id of soure Rect
+        </li>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Route_Actions"></a>Route Actions </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "ai.route.Init"></a>
+    <strong>ai.route.Init ()</strong>
+    </dt>
+    <dd>
+    Route Functions Init runs when ai.Init() is run
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ai.html#Init">ai.Init</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "ai.route.New"></a>
+    <strong>ai.route.New (name, loop)</strong>
+    </dt>
+    <dd>
+    Creates a new route that villagers can take when Moving.   Make sure to specify all Steps, Actions and Triggers before creating an additional route
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+          string  Route Name
+        </li>
+        <li><span class="parameter">loop</span>
+          boolean Whether or not the route is a loop
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.route.Step"></a>
+    <strong>ai.route.Step (rect, speed, point, order, animationTag)</strong>
+    </dt>
+    <dd>
+    Adds at the end of the selected route, a new place for a unit to move to.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">rect</span>
+                  any    The Rect (GUI Region) that the unit will walk to
+        </li>
+        <li><span class="parameter">speed</span>
+                 number  OPTIONAL | Unit Speed | Walk/Run speed of unit.  (under 100 will walk)
+        </li>
+        <li><span class="parameter">point</span>
+                 string  OPTIONAL | "center" | [center, random] Picks either the center of the Rect or a random point in the rect.
+        </li>
+        <li><span class="parameter">order</span>
+                 number  OPTIONAL | oid.move |  the order to use to move.
+        </li>
+        <li><span class="parameter">animationTag</span>
+          string  OPTIONAL | nil | an anim tag to add to the unit while walking
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.route.Action"></a>
+    <strong>ai.route.Action (time, lookAtRect, animation, loop)</strong>
+    </dt>
+    <dd>
+    Adds an additional action to the picked route step  Applies to the latest defined Route
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">time</span>
+         number The amount of time the unit will stop for before continueing on to the next action / step / trigger
+        </li>
+        <li><span class="parameter">lookAtRect</span>
+         any OPTIONAL | nil | The rect that the unit will need to look at
+        </li>
+        <li><span class="parameter">animation</span>
+         string OPTIONAL | nil | The string of the animation you want the unit to play at this action
+        </li>
+        <li><span class="parameter">loop</span>
+         boolean OPTIONAL | false | Whether or not the animation specified should loop until the end or play once and pause
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.route.Trigger"></a>
+    <strong>ai.route.Trigger (trigger)</strong>
+    </dt>
+    <dd>
+    Add a trigger to the step as the next action.   (Needs to be a GUI Defined trigger)
+
+The trigger needs to have the first and last line of the trigger be exactly as definitely in the test action in the test project or it will break the GUI
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">trigger</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.route.Funct"></a>
+    <strong>ai.route.Funct (funct)</strong>
+    </dt>
+    <dd>
+    Adds a Function to the Route (NOT FINISHED)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">funct</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.route.Finish"></a>
+    <strong>ai.route.Finish (speed)</strong>
+    </dt>
+    <dd>
+    Finish out the route and specify the speed at which units should use to go back to their home positions
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">speed</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.route.StepCount"></a>
+    <strong>ai.route.StepCount (route)</strong>
+    </dt>
+    <dd>
+    Get the Count of steps in a route
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">route</span>
+         string
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        any
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.route.ActionCount"></a>
+    <strong>ai.route.ActionCount (route, step)</strong>
+    </dt>
+    <dd>
+    Get the Count of Actions in a Step
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">route</span>
+         string
+        </li>
+        <li><span class="parameter">step</span>
+         string
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        any
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Unit_Actions"></a>Unit Actions </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "ai.unit.Init"></a>
+    <strong>ai.unit.Init ()</strong>
+    </dt>
+    <dd>
+    Unit Functions Init runs when ai.Init() is run
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ai.html#Init">ai.Init</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.New"></a>
+    <strong>ai.unit.New (town, type, unit, name, shift, radius)</strong>
+    </dt>
+    <dd>
+    Adds a unit that exists into the fold to be controlled by the AI.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         string This is the town that will control aspects of the Unit
+        </li>
+        <li><span class="parameter">type</span>
+         string This specifies the state the unit has access to see States for more info
+        </li>
+        <li><span class="parameter">unit</span>
+         any The unit that will be added to the AI
+        </li>
+        <li><span class="parameter">name</span>
+         string OPTIONAL | Default Name of Unit | The name of the unit. (This will rename the unit in game to this)
+        </li>
+        <li><span class="parameter">shift</span>
+         string OPTIONAL | "day" | ["day", "night", "all"] Specifies when the unit will be active
+        </li>
+        <li><span class="parameter">radius</span>
+         number OPTIONAL | 600 | Specifies the units vision radius it uses to detect actions.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.AddRoute"></a>
+    <strong>ai.unit.AddRoute (unit, route)</strong>
+    </dt>
+    <dd>
+    Adds a route to a unit.  (Unit must already be in the AI or else this will fail)
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+        <li><span class="parameter">route</span>
+         string
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.RemoveRoute"></a>
+    <strong>ai.unit.RemoveRoute (unit, route)</strong>
+    </dt>
+    <dd>
+    Removes the route from the units list of routes
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+        <li><span class="parameter">route</span>
+         string
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.Kill"></a>
+    <strong>ai.unit.Kill (unit)</strong>
+    </dt>
+    <dd>
+    Kills the Unit and removes it from AI
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.Remove"></a>
+    <strong>ai.unit.Remove (unit)</strong>
+    </dt>
+    <dd>
+    Remove the Unit from the AI (Unit will be controlled as if it was an ordinary Unit)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.Pause"></a>
+    <strong>ai.unit.Pause (unit, flag)</strong>
+    </dt>
+    <dd>
+    Pause the Unit
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+        <li><span class="parameter">flag</span>
+         boolean If true the unit will pause, if false the unit will unpause
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.PickRoute"></a>
+    <strong>ai.unit.PickRoute (unit, route, stepNumber, actionNumber)</strong>
+    </dt>
+    <dd>
+    Pick a Route from the Units avalable routes and set it up (Unit will not start moving down the route, this ONLY gets it ready to)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any The Unit in the AI system
+        </li>
+        <li><span class="parameter">route</span>
+         string OPTIONAL if you want a specific route chosen else it will pick one
+        </li>
+        <li><span class="parameter">stepNumber</span>
+         integer OPTIONAL if you want a specific Step chosen else it will start at the beginning
+        </li>
+        <li><span class="parameter">actionNumber</span>
+         integer OPTIONAL if you want a specific Action chosen else it will start at the beginning
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.NextStep"></a>
+    <strong>ai.unit.NextStep (unit)</strong>
+    </dt>
+    <dd>
+    Run next Step in a Units Current Route
+
+Run the next Step in the Unit's current Route
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.NextAction"></a>
+    <strong>ai.unit.NextAction (unit)</strong>
+    </dt>
+    <dd>
+    Run the units next Route Action
+
+Run the Next Action in the Units Current Step in its current Route
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.State"></a>
+    <strong>ai.unit.State (unit, state)</strong>
+    </dt>
+    <dd>
+    Set the Unit State
+
+Set the Unit's Current state (This is an active step that will change the state and run a set of commands for that state)
+
+Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+        <li><span class="parameter">state</span>
+         string
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.MoveToNextStep"></a>
+    <strong>ai.unit.MoveToNextStep (unit, immediately)</strong>
+    </dt>
+    <dd>
+    Goes to either the Units next Step, Action or Ends the route  (Use this in GUI 99% of the time)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+        <li><span class="parameter">immediately</span>
+         any OPTIONAL | false | If set to true the function will wait to issue the next step until after the unit has stopped moving
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Unit_States"></a>Unit States </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "ai.unitSTATE.Init"></a>
+    <strong>ai.unitSTATE.Init ()</strong>
+    </dt>
+    <dd>
+    Unit States Functions Init runs when ai.Init() is run
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ai.html#Init">ai.Init</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "ai.unitSTATE.Move"></a>
+    <strong>ai.unitSTATE.Move (unit, route)</strong>
+    </dt>
+    <dd>
+    Will pick a route from the units available routes or specified route and send them on the quest
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+        <li><span class="parameter">route</span>
+         any @OPTIONAL | Random route picked from units routes | This is the route that the specified unit will go on.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unitSTATE.Relax"></a>
+    <strong>ai.unitSTATE.Relax (unit)</strong>
+    </dt>
+    <dd>
+    Same as Wait but will periodically transition to other states based on the town activitiy probability  Currently transitions to "Moving"
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unitSTATE.Wait"></a>
+    <strong>ai.unitSTATE.Wait (unit)</strong>
+    </dt>
+    <dd>
+    Will not change state unless Prompted, shift change or Sensing danger
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unitSTATE.ReturnHome"></a>
+    <strong>ai.unitSTATE.ReturnHome (unit)</strong>
+    </dt>
+    <dd>
+    The unit will stop what it's doing, clear out it's current route and begin to walk back to it's home position and facing angle
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header has-description"><a name="Unit_States_Transient"></a>Unit States Transient </h2>
+
+          <div class="section-description">
+
+
+ These states are never set manually.  Only ever set units to have full states.
+
+          </div>
+    <dl class="function">
+    <dt>
+    <a name = "ai.unitSTATE.Moving"></a>
+    <strong>ai.unitSTATE.Moving (unit)</strong>
+    </dt>
+    <dd>
+    Unit will check to see if it's walking if not, then it will move to it's next order
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unitSTATE.Waiting"></a>
+    <strong>ai.unitSTATE.Waiting (unit)</strong>
+    </dt>
+    <dd>
+    This is an inbetween state.   Don't manually set it's state to this.
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unitSTATE.ReturningHome"></a>
+    <strong>ai.unitSTATE.ReturningHome (unit)</strong>
+    </dt>
+    <dd>
+    This is an inbetween state.   Don't manually set it's state to this.
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unitSTATE.Relaxing"></a>
+    <strong>ai.unitSTATE.Relaxing (unit)</strong>
+    </dt>
+    <dd>
+    This runs when a unit's state is changed to Relax.   Unit is not moving or doing anything.  Just standing.  At unit's tick, has a chance to tell the unit to go into another state.
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header has-description"><a name="Intel_Checks"></a>Intel Checks </h2>
+
+          <div class="section-description">
+
+
+ All of the Intelligence Checks for units
+
+          </div>
+    <dl class="function">
+    <dt>
+    <a name = "ai.intel.Init"></a>
+    <strong>ai.intel.Init ()</strong>
+    </dt>
+    <dd>
+    Intel Functions Init runs when ai.Init() is run
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ai.html#Init">ai.Init</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "ai.intel.TownPre"></a>
+    <strong>ai.intel.TownPre (town)</strong>
+    </dt>
+    <dd>
+    Intelligence for Town Pre State Check
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.intel.TownPost"></a>
+    <strong>ai.intel.TownPost (town)</strong>
+    </dt>
+    <dd>
+    Intellince for town Post State Check
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.intel.UnitPre"></a>
+    <strong>ai.intel.UnitPre (unit)</strong>
+    </dt>
+    <dd>
+    Update the Units Intel (Will run automatically at the unit's tick)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.intel.UnitPost"></a>
+    <strong>ai.intel.UnitPost (unit)</strong>
+    </dt>
+    <dd>
+    Runs a post check of intel after all states and Intel have been gathered at the end of a unit's tick
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Triggers"></a>Triggers </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "ai.trig.Init"></a>
+    <strong>ai.trig.Init ()</strong>
+    </dt>
+    <dd>
+    Trigger Functions Init runs when ai.Init() is run
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ai.html#Init">ai.Init</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "ai.trig.TownLoop"></a>
+    <strong>ai.trig.TownLoop</strong>
+    </dt>
+    <dd>
+    Trigger to loop through towns and get unit info.   (Loops every 5 seconds)
+
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.trig.UnitLoop"></a>
+    <strong>ai.trig.UnitLoop</strong>
+    </dt>
+    <dd>
+    The Trigger that Loops through units to get Unit Intellegence
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.trig.UnitEntersRegion"></a>
+    <strong>ai.trig.UnitEntersRegion</strong>
+    </dt>
+    <dd>
+    Trigger Unit enters a Rect in a Route
+
+
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2021-04-24 22:27:01 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
