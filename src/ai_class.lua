@@ -18,6 +18,7 @@ function ai.Init(tickUnit, splitUnit, tickTown)
 		tickUnit = tickUnit or ai.tick
 		splitUnit = splitUnit or ai.split
 
+		
 		ai.landmarkNames = {}
 		ai.townNames = {}
 		ai.townCount = 0
