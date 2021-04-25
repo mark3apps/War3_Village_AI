@@ -6,6 +6,5 @@
         "Documentation": [
             "src/*.lua"
         ]
-    }, 
-    "triggerTaskOnSave.selectedTask": "Documentation"
+    }
 }

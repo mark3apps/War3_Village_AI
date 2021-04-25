@@ -4,16 +4,21 @@ function Config()
 
 		-- Add Towns
 		-- Set up the town, set activity probabiliy per tick and the AI tick Multipler (3 percent chance to start moving, 1x)
-		ai.town.New("city", 3, 1)
+		ai.town.New("city", 3)
+		ai.town.Extend("city", gg_rct_City_01)
+		ai.town.Extend("city", gg_rct_City_02)
+		ai.town.HostileForce("city", udg_townCityHostile)
 
-		-- Set the player group that the town finds Hostile
-		ai.town.HostileForce("city", udg_townVillageForce)
+		ai.town.New("village", 3)
+		ai.town.Extend("village", gg_rct_OuterVilage_01)
+		ai.town.HostileForce("village", udg_townVillageHostile)
+
 
 		-- CounterClockwise Route (Listed as a looping route,
 		-- meaning units will start at the step closest to their
 		-- location and then finish on that same step by looping
 		-- through all of the steps)
-		ai.route.New("city_01", true, "inTown")
+		ai.route.New("city_01", true)
 		ai.route.Step(gg_rct_Region_000, 100)
 		ai.route.Step(gg_rct_Region_001, 100)
 		ai.route.Step(gg_rct_Region_002, 100)
@@ -52,7 +57,7 @@ function Config()
 
 		--
 		-- Clockwise Route
-		ai.route.New("city_02", true, "inTown")
+		ai.route.New("city_02", true)
 		ai.route.Step(gg_rct_Region_040, 100)
 		ai.route.Step(gg_rct_Region_039, 100)
 		ai.route.Step(gg_rct_Region_038, 100)
@@ -79,7 +84,7 @@ function Config()
 
 		--
 		-- Go To the other Town
-		ai.route.New("Out", true, "inTown")
+		ai.route.New("Out", true)
 		ai.route.Step(gg_rct_Region_031, 100)
 		ai.route.Step(gg_rct_Region_032, 100)
 		ai.route.Step(gg_rct_Region_033, 100)
@@ -116,7 +121,7 @@ function Config()
 		ai.route.Finish(100)
 
 		-- Gather Units Together
-		ai.route.New("gather", false, "inTown")
+		ai.route.New("gather", false)
 		ai.route.Step(gg_rct_Region_014, 100, "random")
 		ai.route.Action(90, gg_rct_Region_028)
 		ai.route.Finish(100)

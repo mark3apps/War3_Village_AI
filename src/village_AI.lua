@@ -1,45 +1,80 @@
 ---This Contains all of the Functions that you'll need to run and set up the AI.  Most of the functions won't need to be used.  As they're used for internal purposes.
 ---@diagnostic disable: lowercase-global
 ---@author Mark Wright (KickKing)
-blank = nil
+ai = {landmark = {}, town = {}, region = {}, route = {}, unit = {}, unitSTATE = {}, intel = {}, trig = {}}
 
----This Table contains all of the functions and data for the Village
----@table ai
--- @field town All of the town Functions and Variables
--- @field townNames All of the Town Names
--- @field unit All of the Unit Functions and variables
-ai = {
-	town = {},
-	townNames = {},
-	unit = {},
-	landmark = {},
-	landmarkNames = {},
-	route = {},
-	trig = {},
-	unitSTATE = {},
-	townSTATE = {},
-	region = {},
-	landmarkSTATE = {},
-	tick = 2,
-	split = 5,
-	unitGroup = CreateGroup()
-}
+---Initialization.
+-- Initialization of AI Villagers
+-- @section init
 
---- Test Pull This is the first command that need to be run before anything else.  Initializes everything that's needed.
----@param overallTick number    OPTIONAL 2 | The interval at which each unit added to AI will update it's intelligence and make decisions   
----@param overallSplit number   OPTIONAL 5 | The amount of splits that the Ticks will process Unit intelligence at.  1 means all AI ticks will be processed at the same time, 3 means processing will be split into 3 groups.
-function ai.Init(overallTick, overallSplit)
+--- This Initialized everything needed to run Village AI. Run this before using any other functions in AI Villagers.
+---@param tickUnit number    OPTIONAL | 2 | The interval at which each unit added to AI will update it's intelligence and make decisions   
+---@param splitUnit number   OPTIONAL | 5 | The amount of splits that the Ticks will process Unit intelligence at.  1 means all AI ticks will be processed at the same time, 3 means processing will be split into 3 groups.
+---@param tickTown number    OPTIONAL | 5 | The interval at which each Town added to AI will update it's intelligence and make decisions   
+function ai.Init(tickUnit, splitUnit, tickTown)
 
-	-- Set Overall Tick if a value isn't specified
-	overallTick = overallTick or ai.tick
-	overallSplit = overallSplit or ai.split
+	Debugfunc(function()
+		-- Set Overall Tick if a value isn't specified
+		tickTown = tickTown or ai.tickTown
+		tickUnit = tickUnit or ai.tick
+		splitUnit = splitUnit or ai.split
 
-	ai.tick = overallTick
-	ai.split = overallSplit
+		ai.landmarkNames = {}
+		ai.townNames = {}
+		ai.townCount = 0
+		ai.unitGroup = CreateGroup()
+		ai.unitGroupTick = CreateGroup()
+		ai.tick = tickUnit
+		ai.split = splitUnit
+		ai.tickTown = tickTown
 
-	---Landmark Actions
-	-- @section landmark
-	--
+		ai.landmark.Init()
+		ai.town.Init()
+		ai.region.Init()
+		ai.route.Init()
+		ai.unit.Init()
+		ai.unitSTATE.Init()
+		ai.intel.Init()
+		ai.trig.Init()
+
+		---Start Running the AI
+		---@return boolean
+		function ai.Start()
+
+			-- Add Tick Event and Start Unit Loop Inteligence
+			EnableTrigger(ai.trig.UnitLoop)
+
+			-- Enable Unit Route Management
+			EnableTrigger(ai.trig.UnitEntersRegion)
+
+			return true
+
+		end
+
+		---Stop Running the AI
+		---@return boolean
+		function ai.Stop()
+
+			-- Stop Unit Intelligence
+			DisableTrigger(ai.trig.UnitLoop)
+
+			-- Enable Unit Route Management
+			DisableTrigger(ai.trig.UnitEntersRegion)
+
+			return true
+		end
+
+	end, "Init")
+end
+
+---Landmark Actions
+-- @section landmark
+--
+
+---Landmark Init runs when ai.Init() is run
+---@see ai.Init
+---@return boolean
+function ai.landmark.Init()
 
 	---Creates a New Landmark and Adds it.
 	---@param town string
@@ -61,7 +96,7 @@ function ai.Init(overallTick, overallSplit)
 		ai.landmark[name] {
 			id = handleId,
 			alive = true,
-			state = "normal",
+			state = "Normal",
 			town = town,
 			name = name,
 			rect = rect,
@@ -78,22 +113,29 @@ function ai.Init(overallTick, overallSplit)
 
 	end
 
-	--- Town Actions
-	--  @section town
-	--
+	return true
+end
+
+--- Town Actions
+--  @section town
+--
+
+---Town Functions Init runs when ai.Init() is run
+---@see ai.Init
+---@return boolean
+function ai.town.Init()
 
 	---Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
 	---@param name string   This is the name of the town.  This is used to reference the town in other functions
 	---@param activityProbability number Specifies the percentage chance that a unit will run down an activity per unit tick
-	---@param tickMultiplier number multiples the AI Tick by this value for every unit contained in this town.  If the tick is set to 3 seconds and the multiplier is set to 2, the tick for this town's unit will be 6 seconds.
 	---@return boolean
-	function ai.town.New(name, activityProbability, tickMultiplier)
+	function ai.town.New(name, activityProbability)
 
 		activityProbability = activityProbability or 5
-		tickMultiplier = tickMultiplier or 1
 
 		-- Add to list of towns
 		table.insert(ai.townNames, name)
+		ai.townCount = ai.townCount + 1
 
 		-- Init the Town
 		ai.town[name] = {
@@ -104,8 +146,8 @@ function ai.Init(overallTick, overallSplit)
 
 			-- States
 			state = "Auto",
-			stateCurrent = "Normal",
-			states = {"Auto", "Normal", "Danger", "Pause", "Paused", "Abadon", "Gather"},
+			stateCurrent = "Relaxing",
+			states = {"Relax", "Relaxing", "Warn", "Warning", "Alert", "Alerting", "Pause", "Paused"},
 
 			-- Units
 			units = CreateGroup(),
@@ -113,9 +155,6 @@ function ai.Init(overallTick, overallSplit)
 
 			-- AI Activity Probability
 			activityProbability = activityProbability,
-
-			-- AI Intelligence Tick
-			tickMultiplier = tickMultiplier,
 
 			-- Set Up Landmarks
 			residence = {},
@@ -137,6 +176,7 @@ function ai.Init(overallTick, overallSplit)
 	---@return boolean
 	function ai.town.Extend(name, rect)
 		RegionAddRect(ai.town[name].region, rect)
+		table.insert(ai.town[name].rects, rect)
 
 		return true
 	end
@@ -249,11 +289,16 @@ function ai.Init(overallTick, overallSplit)
 
 		return true
 	end
+end
 
-	---Region Actions
-	-- @section Region
-	--
+---Region Actions
+-- @section Region
+--
 
+---Region Functions Init runs when ai.Init() is run
+---@see ai.Init
+---@return boolean
+function ai.region.Init()
 	---Set up a new region (Internal Function, Don't need to use)
 	---@param rect any
 	function ai.region.New(rect)
@@ -312,21 +357,26 @@ function ai.Init(overallTick, overallSplit)
 			return false
 		end
 	end
+end
 
-	---Route Actions
-	-- @section route
-	--
+---Route Actions
+-- @section route
+--
+
+---Route Functions Init runs when ai.Init() is run
+---@see ai.Init
+---@return boolean
+function ai.route.Init()
 
 	---Creates a new route that villagers can take when Moving.  Make sure to specify all Steps, Actions and Triggers before creating an additional route
 	---@param name  string  Route Name
 	---@param loop  boolean Whether or not the route is a loop
-	---@param type  string  inTown or outOfTown
 	---@return      boolean
-	function ai.route.New(name, loop, type)
+	function ai.route.New(name, loop)
 
 		ai.routeSetup = name
 		-- Set up the route Vars
-		ai.route[name] = {name = name, type = type, step = {}, stepCount = 0, endSpeed = nil, loop = loop}
+		ai.route[name] = {name = name, step = {}, stepCount = 0, endSpeed = nil, loop = loop}
 
 		return true
 	end
@@ -458,10 +508,16 @@ function ai.Init(overallTick, overallSplit)
 	---@param step string
 	---@return any
 	function ai.route.ActionCount(route, step) return ai.route[route].step[step].actionCount end
+end
 
-	---Unit Actions
-	-- @section unit
-	--
+---Unit Actions
+-- @section unit
+--
+
+---Unit Functions Init runs when ai.Init() is run
+---@see ai.Init
+---@return boolean
+function ai.unit.Init()
 
 	---Adds a unit that exists into the fold to be controlled by the AI.
 	---@param town string This is the town that will control aspects of the Unit
@@ -498,8 +554,6 @@ function ai.Init(overallTick, overallSplit)
 			name = name,
 			enemies = 0,
 			alertedAllies = 0,
-			tick = ai.tick * ai.town[town].tickMultiplier,
-			loop = GetRandomReal(0, ai.tick * ai.town[town].tickMultiplier),
 			shift = shift,
 			state = "Auto",
 			type = type,
@@ -524,7 +578,9 @@ function ai.Init(overallTick, overallSplit)
 		}
 
 		if type == "villager" then
-			ai.unit[handleId].states = {"Relax", "Relaxing", "Move", "Moving", "Sleep", "ReturnHome", "ReturningHome", "Wait", "Waiting"}
+			ai.unit[handleId].states = {
+				"Relax", "Relaxing", "Move", "Moving", "Sleep", "ReturnHome", "ReturningHome", "Wait", "Waiting"
+			}
 			ai.unit[handleId].stateCurrent = "Relax"
 
 		end
@@ -813,53 +869,6 @@ function ai.Init(overallTick, overallSplit)
 		return false
 	end
 
-	---Update the Units Intel (Will run automatically at the unit's tick)
-	---@param unit any
-	function ai.unit.IntelPre(unit)
-
-		local data = ai.unit[GetHandleId(unit)]
-
-		local u
-
-		local enemies = 0
-		local alertedAllies = 0
-		local g = CreateGroup()
-		local l = GetUnitLoc(unit)
-
-		-- g = GetUnitsInRangeOfLocAll(data.radius, l)
-
-		-- u = FirstOfGroup(g)
-		-- while u ~= nil do
-
-		--     -- Look for alerted Allies or Enemy units
-		--     if IsUnitInForce(u, ai.town[data.town].hostileForce) then
-		--         enemies = enemies + 1
-		--     elseif IsUnitInGroup(u, ai.unitGroup) and
-		--         ai.unit[GetHandleId(u)].alerted == true then
-		--         alertedAllies = alertedAllies + 1
-		--     end
-
-		--     GroupRemoveUnit(g, u)
-		--     u = FirstOfGroup(g)
-		-- end
-		-- DestroyGroup(g)
-		-- RemoveLocation(l)
-
-		-- ai.unit[data.id].enemies = enemies
-		-- ai.unit[data.id].alertedAllies = alertedAllies
-	end
-
-	---Runs a post check of intel after all states and Intel have been gathered at the end of a unit's tick
-	---@param unit any
-	---@return boolean
-	function ai.unit.IntelPost(unit)
-		local data = ai.unit[GetHandleId(unit)]
-
-		ai.unit[data.id].orderLast = GetUnitCurrentOrder(unit)
-		return true
-
-	end
-
 	---Goes to either the Units next Step, Action or Ends the route  (Use this in GUI 99% of the time)
 	---@param unit any
 	---@param immediately any OPTIONAL | false | If set to true the function will wait to issue the next step until after the unit has stopped moving
@@ -936,9 +945,15 @@ function ai.Init(overallTick, overallSplit)
 		end, "Test")
 		return true
 	end
+end
 
-	---Unit States
-	-- @section unitStates
+---Unit States
+-- @section unitStates
+
+---Unit States Functions Init runs when ai.Init() is run
+---@see ai.Init
+---@return boolean
+function ai.unitSTATE.Init()
 
 	---Will pick a route from the units available routes or specified route and send them on the quest
 	---@param unit any
@@ -1066,56 +1081,163 @@ function ai.Init(overallTick, overallSplit)
 
 		return true
 	end
+end
 
-	--
-	---TRIGGERS
-	-- @section triggers
+---Intel Checks.
+-- All of the Intelligence Checks for units
+-- @section intel
 
+---Intel Functions Init runs when ai.Init() is run
+---@see ai.Init
+---@return boolean
+function ai.intel.Init()
+
+	---Intelligence for Town Pre State Check
+	---@param town any
+	---@return boolean
+	function ai.intel.TownPre(town)
+
+		town = ai.town[town]
+
+		if town.hostileForce ~= nil and town.stateCurrent ~= "Paused" then
+			local u
+
+			local g = CreateGroup()
+			local g2 = CreateGroup()
+
+			-- Get all Units in the groups
+			for i = 1, #town.rects, 1 do
+				g2 = GetUnitsInRectAll(town.rects[i])
+				GroupAddGroup(g, g2)
+				DestroyGroup(g2)
+			end
+
+		end
+
+		return true
+	end
+
+	---Intellince for town Post State Check
+	---@param town any
+	---@return boolean
+	function ai.intel.TownPost(town) return true end
+
+	---Update the Units Intel (Will run automatically at the unit's tick)
+	---@param unit any
+	function ai.intel.UnitPre(unit)
+
+		local data = ai.unit[GetHandleId(unit)]
+
+		local u
+
+		local enemies = 0
+		local alertedAllies = 0
+		local g = CreateGroup()
+		local l = GetUnitLoc(unit)
+
+		-- Find out if enemies are around if the Town is issueing a warning
+		if ai.town[data.town].stateCurrent == "Warning" then
+			g = GetUnitsInRangeOfLocAll(data.radius, l)
+
+			u = FirstOfGroup(g)
+			while u ~= nil do
+
+				-- Look for alerted Allies or Enemy units
+				if IsUnitInForce(u, ai.town[data.town].hostileForce) then
+					enemies = enemies + 1
+					break
+				elseif IsUnitInGroup(u, ai.unitGroup) and ai.unit[GetHandleId(u)].alerted == true then
+					alertedAllies = alertedAllies + 1
+				end
+
+				GroupRemoveUnit(g, u)
+				u = FirstOfGroup(g)
+			end
+			DestroyGroup(g)
+			RemoveLocation(l)
+
+			ai.unit[data.id].enemies = enemies
+			ai.unit[data.id].alertedAllies = alertedAllies
+		end
+	end
+
+	---Runs a post check of intel after all states and Intel have been gathered at the end of a unit's tick
+	---@param unit any
+	---@return boolean
+	function ai.intel.UnitPost(unit)
+		local data = ai.unit[GetHandleId(unit)]
+
+		ai.unit[data.id].orderLast = GetUnitCurrentOrder(unit)
+		return true
+
+	end
+end
+
+---Triggers
+-- @section triggers
+
+---Trigger Functions Init runs when ai.Init() is run
+---@see ai.Init
+---@return boolean
+function ai.trig.Init()
 	--
-	--  UNIT LOOPS
+	-- 	TOWN Loops
 	--
 
-	-- Loop to get on Unit Intellegence
+	---Trigger to loop through towns and get unit info.  (Loops every 5 seconds)
+	ai.trig.TownLoop = CreateTrigger()
+	TriggerRegisterTimerEventPeriodic(ai.trig.TownLoop, 5)
+	DisableTrigger(ai.trig.TownLoop)
+
+	TriggerAddAction(ai.trig.TownLoop, function()
+
+		for i = 1, ai.townCount, 1 do
+			ai.intel.TownPre(ai.townNames[i])
+			ai.town.State(ai.townNames[i])
+			ai.intel.TownPost(ai.townNames[i])
+		end
+
+	end)
+
+	--- The Trigger that Loops through units to get Unit Intellegence
 	ai.trig.UnitLoop = CreateTrigger()
 	TriggerRegisterTimerEventPeriodic(ai.trig.UnitLoop, (ai.tick / ai.split))
-
 	DisableTrigger(ai.trig.UnitLoop)
 
 	TriggerAddAction(ai.trig.UnitLoop, function()
 
 		-- Set up Local Variables
 		local u, data
-		local g = CreateGroup()
-
-		-- Add all AI units to the group
-		GroupAddGroup(ai.unitGroup, g)
+		local unitLoopCount = math.floor(CountUnitsInGroup(ai.unitGroup) / ai.split)
 
 		-- Loop through the Units and check to see if they need anything
-		u = FirstOfGroup(g)
-		while u ~= nil do
-			data = ai.unit[GetHandleId(u)]
+		for i = 1, unitLoopCount, 1 do
+			u = FirstOfGroup(ai.unitGroupTick)
 
-			ai.unit[data.id].loop = data.loop + (ai.tick / ai.split)
-
-			-- Check to see if it's time to have the Unit Update itself
-			if ai.unit[data.id].loop > (data.tick * ai.town[data.town].tickMultiplier) then
-				ai.unit[data.id].loop = 0
-
-				-- Run the routine for the unit's current state
-				ai.unit.IntelPre(u)
-				ai.unit.State(u, data.stateCurrent)
-				ai.unit.IntelPost(u)
-
+			-- Reset the group if it's empty
+			if u == nil then
+				DestroyGroup(ai.unitGroupTick)
+				ai.unitGroupTick = CreateGroup()
+				GroupAddGroup(ai.unitGroup, ai.unitGroupTick)
+				u = FirstOfGroup(ai.unitGroupTick)
 			end
 
-			GroupRemoveUnit(g, u)
-			u = FirstOfGroup(g)
-		end
-		DestroyGroup(g)
+			data = ai.unit[GetHandleId(u)]
 
+			-- Run the routine for the unit's current state
+			ai.intel.UnitPre(u)
+			ai.unit.State(u, data.stateCurrent)
+			ai.intel.UnitPost(u)
+
+			GroupRemoveUnit(ai.unitGroupTick, u)
+		end
 	end)
 
-	-- Trigger Unit enters a Rect in a Route
+	--
+	--  Unit Enters Route Region
+	--
+
+	--- Trigger Unit enters a Rect in a Route
 	ai.trig.UnitEntersRegion = CreateTrigger()
 	DisableTrigger(ai.trig.UnitEntersRegion)
 	TriggerAddAction(ai.trig.UnitEntersRegion, function()
@@ -1144,34 +1266,5 @@ function ai.Init(overallTick, overallSplit)
 		end, "Loop")
 		return false
 	end)
-
-	--- AI Control
-	-- @section control
-
-	---Start Running the AI
-	---@return boolean
-	function ai.Start()
-
-		-- Add Tick Event and Start Unit Loop Inteligence
-		EnableTrigger(ai.trig.UnitLoop)
-
-		-- Enable Unit Route Management
-		EnableTrigger(ai.trig.UnitEntersRegion)
-
-		return true
-
-	end
-
-	---Stop Running the AI
-	---@return boolean
-	function ai.Stop()
-
-		-- Stop Unit Intelligence
-		DisableTrigger(ai.trig.UnitLoop)
-
-		-- Enable Unit Route Management
-		DisableTrigger(ai.trig.UnitEntersRegion)
-
-		return true
-	end
 end
+

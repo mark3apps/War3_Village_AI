@@ -6,7 +6,11 @@
         {
             "label": "Documentation",
             "type": "shell",
-            "command": "ldoc src/"
+            "command": "ldoc src/",
+            "presentation": {
+                "reveal": "silent",
+                "clear": true
+              }
         }
     ]
 }
