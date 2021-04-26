@@ -49,13 +49,25 @@ gg_rct_Region_038 = nil
 gg_rct_Region_039 = nil
 gg_rct_Region_040 = nil
 gg_rct_Region_041 = nil
+gg_rct_City_01 = nil
+gg_rct_City_02 = nil
+gg_rct_OuterVilage_01 = nil
 gg_trg_Melee_Initialization = nil
 gg_trg_Action_Test = nil
 gg_trg_Send_Home = nil
 gg_trg_Gather_Units = nil
-gg_rct_City_01 = nil
-gg_rct_City_02 = nil
-gg_rct_OuterVilage_01 = nil
+gg_rct_CityRes01 = nil
+gg_rct_CityRes02 = nil
+gg_rct_CityRes03 = nil
+gg_rct_CityRes04 = nil
+gg_rct_CityRes05 = nil
+gg_rct_CityRes06 = nil
+gg_rct_CityRes07 = nil
+gg_rct_CityRes08 = nil
+gg_rct_CityRes09 = nil
+gg_rct_VIllageRes01 = nil
+gg_rct_VIllageRes02 = nil
+gg_rct_VIllageRes03 = nil
 function InitGlobals()
     udg_townVillageHostile = CreateForce()
     udg_AI_TriggeringRoute = ""
@@ -78,7 +90,10 @@ ai = {
 	townSTATE = {},
 	landmarkSTATE = {},
 	intel = {},
-	trig = {}
+	trig = {},
+	tick = 3,
+	split = 7,
+	tickTown = 5
 }
 
 ---Initialization.
@@ -92,20 +107,19 @@ ai = {
 function ai.Init(tickUnit, splitUnit, tickTown)
 
 	Debugfunc(function()
+
 		-- Set Overall Tick if a value isn't specified
-		tickTown = tickTown or ai.tickTown
-		tickUnit = tickUnit or ai.tick
-		splitUnit = splitUnit or ai.split
+		ai.tick = tickUnit or ai.tick
+		ai.split = splitUnit or ai.split
+		ai.tickTown = tickTown or ai.tickTown
 
 		ai.landmarkNames = {}
+		ai.landmarkRegions = {}
 		ai.townNames = {}
 		ai.townRegions = {}
 		ai.townCount = 0
 		ai.unitGroup = CreateGroup()
 		ai.unitGroupTick = CreateGroup()
-		ai.tick = tickUnit
-		ai.split = splitUnit
-		ai.tickTown = tickTown
 
 		ai.landmark.Init()
 		ai.town.Init()
@@ -114,7 +128,6 @@ function ai.Init(tickUnit, splitUnit, tickTown)
 		ai.unit.Init()
 		ai.unitSTATE.Init()
 		ai.townSTATE.Init()
-		ai.landmarkSTATE.Init()
 		ai.intel.Init()
 		ai.trig.Init()
 
@@ -129,6 +142,7 @@ function ai.Init(tickUnit, splitUnit, tickTown)
 			-- Enable Unit Route Management
 			EnableTrigger(ai.trig.UnitEntersRoute)
 			EnableTrigger(ai.trig.UnitEntersTown)
+			EnableTrigger(ai.trig.UnitEntersLandmark)
 
 			return true
 
@@ -165,34 +179,39 @@ function ai.landmark.Init()
 	---@param rect table
 	---@param types table
 	---@param unit table OPTIONAL nil |
-	---@param radius number OPTIONAL 600 |
 	---@param maxCapacity number OPTIONAL Unlimited |
-	function ai.landmark.New(town, name, rect, types, unit, radius, maxCapacity)
+	function ai.landmark.New(town, name, rect, types, unit, maxCapacity)
 		unit = unit or nil
-		radius = radius or 600
 		maxCapacity = maxCapacity or 500
 
 		local handleId = GetHandleId(rect)
 
 		-- Add initial variables to the table
-		ai.landmark[name] = {}
-		ai.landmark[name] {
+		ai.landmark[name] = {
 			id = handleId,
 			alive = true,
-			state = "Normal",
 			town = town,
 			name = name,
 			rect = rect,
+			region = CreateRegion(),
 			x = GetRectCenterX(rect),
 			y = GetRectCenterY(rect),
 			types = types,
 			unit = unit,
-			radius = radius,
+			unitsInside = CreateGroup(),
+			unitCount = 0,
 			maxCapacity = maxCapacity
 		}
 
+		-- Set up region
+		RegionAddRect(ai.landmark[name].region, rect)
+		ai.landmarkRegions[GetHandleId(ai.landmark[name].region)] = name
+
+		-- Add Region enter Trigger
+		TriggerRegisterEnterRegionSimple(ai.trig.UnitEntersLandmark, ai.landmark[name].region)
+
 		-- Add Landmark information to the town
-		for i = 1, #ai.landmark[name].types do ai.town[town][ai.landmark[name].type[i]] = name end
+		for i = 1, #types do table.insert(ai.town[town][types[i]], name) end
 
 	end
 
@@ -646,6 +665,7 @@ function ai.unit.Init()
 			shift = shift,
 			type = type,
 			regionId = nil,
+			landmark = nil,
 			walking = false,
 			speed = GetUnitMoveSpeed(unit),
 			speedDefault = GetUnitMoveSpeed(unit),
@@ -667,7 +687,8 @@ function ai.unit.Init()
 
 		if type == "villager" then
 			ai.unit[handleId].states = {
-				"Relax", "Relaxing", "Move", "Moving", "Sleep", "ReturnHome", "ReturningHome", "Wait", "Waiting"
+				"Relax", "Relaxing", "Move", "Moving", "Flee", "Fleeing", "Hide", "Hiding", "Return", "Sleep", "Sleeping",
+    "ReturnHome", "ReturningHome", "Wait", "Waiting"
 			}
 			ai.unit[handleId].state = "Relax"
 
@@ -1049,8 +1070,6 @@ function ai.townSTATE.Init()
 	function ai.townSTATE.Relax(name)
 		local town = ai.town[name]
 
-		print(town.name .. " is Relaxing.")
-
 		ai.town[name].state = "Relaxing"
 		return true
 	end
@@ -1061,8 +1080,6 @@ function ai.townSTATE.Init()
 	function ai.townSTATE.Caution(name)
 		local town = ai.town[name]
 
-		print(town.name .. " is under Caution.")
-
 		ai.town[name].state = "Cautioning"
 		return true
 	end
@@ -1072,8 +1089,6 @@ function ai.townSTATE.Init()
 	---@return boolean
 	function ai.townSTATE.Alert(name)
 		local town = ai.town[name]
-
-		print(town.name .. " is under Alert.")
 
 		ai.town[name].state = "Alerting"
 		return true
@@ -1096,7 +1111,7 @@ function ai.townSTATE.Init()
 	---@param name any
 	---@return boolean
 	function ai.townSTATE.Relaxing(name)
-		print("Relaxing")
+
 		return true
 	end
 
@@ -1105,8 +1120,6 @@ function ai.townSTATE.Init()
 	---@return boolean
 	function ai.townSTATE.Cautioning(name)
 		local town = ai.town[name]
-
-		print("Cautioning")
 
 		if town.unitEnemies > 10 then
 			ai.town.State(name, "Alert")
@@ -1122,8 +1135,6 @@ function ai.townSTATE.Init()
 	---@return boolean
 	function ai.townSTATE.Alerting(name)
 		local town = ai.town[name]
-
-		print("Alerting")
 
 		if town.unitEnemies <= 10 then
 			ai.town.State(name, "Caution")
@@ -1144,30 +1155,6 @@ function ai.townSTATE.Init()
 		return true
 	end
 
-end
-
----Landmark States
--- @section landmarkStates
-
----Landmark States Functions Init runs when ai.Init() is run
----@see ai.Init
----@return boolean
-function ai.landmarkSTATE.Init()
-
-	---comment
-	---@param name any
-	---@return boolean
-	function ai.landmarkSTATE.Relax(name) return true end
-
-	--- Landmark States Transient
-	-- @section landmarkStatesTransient
-
-	---comment
-	---@param name any
-	---@return boolean
-	function ai.landmarkSTATE.Relaxing(name) return true end
-
-	return true
 end
 
 ---Unit States
@@ -1193,6 +1180,112 @@ function ai.unitSTATE.Init()
 
 		ai.unit.PickRoute(unit)
 		ai.unit.MoveToNextStep(unit)
+
+		return true
+	end
+
+	---comment
+	---@param unit any
+	---@return boolean
+	function ai.unitSTATE.Flee(unit)
+
+		Debugfunc(function()
+
+			local u, distanceNew, landmark, landmarkPicked
+
+			local data = ai.unit[GetHandleId(unit)]
+			local distance = 99999999
+
+			local x = GetUnitX(unit)
+			local y = GetUnitY(unit)
+			for i = 1, #ai.town[data.town].safehouse do
+
+				landmark = ai.landmark[ai.town[data.town].safehouse[i]]
+
+				distanceNew = DistanceBetweenCoordinates(x, y, landmark.x, landmark.y)
+				if distanceNew < distance and landmark.alive == true and landmark.unitCount < landmark.maxCapacity then
+					distance = distanceNew
+					landmarkPicked = landmark
+				end
+			end
+
+			if landmarkPicked ~= nil then
+				ai.unit[data.id].xDest = landmarkPicked.x
+				ai.unit[data.id].yDest = landmarkPicked.y
+				ai.unit[data.id].landmark = landmarkPicked.name
+
+				-- Reset speed and animation
+				SetUnitMoveSpeed(unit, data.speedDefault)
+				BlzSetUnitRealFieldBJ(unit, UNIT_RF_ANIMATION_WALK_SPEED, 270.00)
+				AddUnitAnimationPropertiesBJ(false, "cinematic", unit)
+
+				
+				-- Get unit to run to the landmark
+				IssuePointOrderById(unit, oid.move, landmarkPicked.x, landmarkPicked.y)
+			end
+
+			-- Set state to Fleeing
+			ai.unit[data.id].alerted = true
+
+			if IsUnitInRegion(landmarkPicked.region, unit) then
+				ai.unit.State(unit, "Hide")
+			else
+				ai.unit.State(unit, "Fleeing")
+			end
+
+			
+		end, "Flee")
+
+		return true
+	end
+
+	---comment
+	---@param unit any
+	---@return boolean
+	function ai.unitSTATE.Hide(unit)
+
+		Debugfunc(function()
+			local data = ai.unit[GetHandleId(unit)]
+			local landmark = ai.landmark[data.landmark]
+
+			if landmark.unitCount >= landmark.maxCapacity then
+				ai.unit.State(unit, "Flee")
+
+			else
+				ShowUnitHide(unit)
+				PauseUnit(unit, true)
+
+				ai.landmark[data.landmark].unitCount = ai.landmark[data.landmark].unitCount + 1
+				GroupAddUnit(ai.landmark[data.landmark].unitsInside, unit)
+
+				ai.unit.State(unit, "Hiding")
+			end
+		end, "Hide")
+
+		return true
+	end
+
+	---comment
+	---@param unit any
+	---@return boolean
+	function ai.unitSTATE.Return(unit)
+		local data = ai.unit[GetHandleId(unit)]
+
+		Debugfunc(function()
+
+			-- Show Unit again
+			PauseUnit(unit, false)
+			ShowUnitShow(unit)
+
+			-- Remove unit from Landmark
+			GroupRemoveUnit(ai.landmark[data.landmark].unitsInside)
+			ai.landmark[data.landmark].unitCount = ai.landmark[data.landmark].unitCount - 1
+			ai.unit[data.id].alerted = false
+
+			-- If unit has a route to finish, send them on the route
+			ai.unit.State(unit, "ReturnHome")
+
+		end, "Return")
 
 		return true
 	end
@@ -1264,6 +1357,29 @@ function ai.unitSTATE.Init()
 		return true
 	end
 
+	---comment
+	---@param unit any
+	---@return boolean
+	function ai.unitSTATE.Hiding(unit)
+		local data = ai.unit[GetHandleId(unit)]
+		local town = ai.town[data.town]
+
+		if town.state == "Relaxing" then ai.unit.State(unit, "Return") end
+
+		return true
+	end
+
+	---comment
+	---@param unit any
+	---@return boolean
+	function ai.unitSTATE.Fleeing(unit)
+		local data = ai.unit[GetHandleId(unit)]
+
+		if ai.town[data.town].state == "Relax" then ai.unit.state(unit, "ReturnHome") end
+
+		return true
+	end
+
 	---This is an inbetween state.  Don't manually set it's state to this.
 	---@param unit any
 	---@return boolean
@@ -1326,8 +1442,6 @@ function ai.intel.Init()
 			if town.hostileForce ~= nil and (town.state == "Alerting" or town.state == "Cautioning") then
 				local u
 
-				print("Looking Hard")
-
 				local g = CreateGroup()
 				local g2 = CreateGroup()
 
@@ -1336,7 +1450,8 @@ function ai.intel.Init()
 				-- Get all Units in the groups
 				for i = 1, #town.rects, 1 do
 					g2 = GetUnitsInRectAll(town.rects[i])
-					GroupAddGroup(g, g2)
+
+					GroupAddGroup(g2, g)
 					DestroyGroup(g2)
 				end
 
@@ -1344,17 +1459,15 @@ function ai.intel.Init()
 				u = FirstOfGroup(g)
 				while u ~= nil do
 
-					if IsUnitInForce(town.hostileForce) then enemies = enemies + 1 end
+					if IsUnitInForce(u, town.hostileForce) and IsUnitAliveBJ(u) then enemies = enemies + 1 end
 
-					GroupRemoveUnit(u)
+					GroupRemoveUnit(g, u)
 					u = FirstOfGroup(g)
 				end
 				DestroyGroup(g)
 
 				-- Update Town Info
 				ai.town[name].unitEnemies = enemies
-
-				print(enemies)
 			end
 
 		end, "Town Pre")
@@ -1370,39 +1483,47 @@ function ai.intel.Init()
 	---@param unit any
 	function ai.intel.UnitPre(unit)
 
-		local data = ai.unit[GetHandleId(unit)]
+		Debugfunc(function()
+			local data = ai.unit[GetHandleId(unit)]
 
-		local u
+			-- Find out if enemies are around if the Town is issueing a warning
+			if ai.town[data.town].state == "Cautioning" and data.state ~= "Fleeing" and data.state ~= "Hiding" then
+				local u
 
-		local enemies = 0
-		local alertedAllies = 0
-		local g = CreateGroup()
-		local l = GetUnitLoc(unit)
+				local enemies = 0
+				local alertedAllies = 0
+				local g = CreateGroup()
+				local l = GetUnitLoc(unit)
 
-		-- Find out if enemies are around if the Town is issueing a warning
-		if ai.town[data.town].state == "Warning" then
-			g = GetUnitsInRangeOfLocAll(data.radius, l)
+				g = GetUnitsInRangeOfLocAll(data.radius, l)
+				RemoveLocation(l)
 
-			u = FirstOfGroup(g)
-			while u ~= nil do
-
-				-- Look for alerted Allies or Enemy units
-				if IsUnitInForce(u, ai.town[data.town].hostileForce) then
-					enemies = enemies + 1
-					break
-				elseif IsUnitInGroup(u, ai.unitGroup) and ai.unit[GetHandleId(u)].alerted == true then
-					alertedAllies = alertedAllies + 1
-				end
-
-				GroupRemoveUnit(g, u)
 				u = FirstOfGroup(g)
-			end
-			DestroyGroup(g)
-			RemoveLocation(l)
+				while u ~= nil and enemies == 0 do
 
-			ai.unit[data.id].enemies = enemies
-			ai.unit[data.id].alertedAllies = alertedAllies
-		end
+					-- Look for alerted Allies or Enemy units
+					if IsUnitInForce(u, ai.town[data.town].hostileForce) and IsUnitAliveBJ(u) then
+						enemies = enemies + 1
+					elseif IsUnitInGroup(u, ai.unitGroup) and ai.unit[GetHandleId(u)].alerted == true then
+						alertedAllies = alertedAllies + 1
+					end
+
+					GroupRemoveUnit(g, u)
+					u = FirstOfGroup(g)
+				end
+				DestroyGroup(g)
+
+				ai.unit[data.id].enemies = enemies
+				ai.unit[data.id].alertedAllies = alertedAllies
+
+				if enemies > 0 or alertedAllies > 3 then ai.unit.State(unit, "Flee") end
+			else
+				ai.unit[data.id].enemies = 0
+				ai.unit[data.id].alertedAllies = 0
+			end
+		end, "Intel")
+
+		return true
 	end
 
 	---Runs a post check of intel after all states and Intel have been gathered at the end of a unit's tick
@@ -1412,6 +1533,7 @@ function ai.intel.Init()
 		local data = ai.unit[GetHandleId(unit)]
 
 		ai.unit[data.id].orderLast = GetUnitCurrentOrder(unit)
+
 		return true
 
 	end
@@ -1434,11 +1556,14 @@ function ai.trig.Init()
 	DisableTrigger(ai.trig.TownLoop)
 
 	TriggerAddAction(ai.trig.TownLoop, function()
+		local town
 
 		for i = 1, ai.townCount, 1 do
-			ai.intel.TownPre(ai.townNames[i])
-			ai.town.State(ai.townNames[i])
-			ai.intel.TownPost(ai.townNames[i])
+			town = ai.town[ai.townNames[i]]
+
+			ai.intel.TownPre(town.name)
+			ai.town.State(town.name, town.state)
+			ai.intel.TownPost(town.name)
 		end
 
 	end)
@@ -1511,6 +1636,32 @@ function ai.trig.Init()
 		return false
 	end)
 
+	--- Trigger Unit enters Landmark
+	ai.trig.UnitEntersLandmark = CreateTrigger()
+	DisableTrigger(ai.trig.UnitEntersLandmark)
+	TriggerAddAction(ai.trig.UnitEntersLandmark, function()
+
+		Debugfunc(function()
+
+			local enteringRegion = GetTriggeringRegion()
+			local enteringUnit = GetEnteringUnit()
+
+			if ai.landmarkRegions[GetHandleId(enteringRegion)] ~= nil and IsUnitInGroup(enteringUnit, ai.unitGroup) then
+
+				local landmark = ai.landmark[ai.landmarkRegions[GetHandleId(enteringRegion)]]
+				local unit = ai.unit[GetHandleId(enteringUnit)]
+
+				if landmark.name == unit.landmark and unit.state == "Fleeing" then
+					local town = ai.town[unit.town]
+
+					ai.unit.State(enteringUnit, "Hide")
+
+				end
+
+			end
+		end, "EnterLandmark")
+	end)
+
 	--
 	--  Unit Enters Town Region
 	--
@@ -1524,7 +1675,6 @@ function ai.trig.Init()
 			local enteringRegion = GetTriggeringRegion()
 			local id = GetHandleId(enteringRegion)
 
-			print("Entering")
 			PingMinimap(GetUnitX(GetEnteringUnit()), GetUnitY(GetEnteringUnit()), 6)
 			if ai.townRegions[id] ~= nil then
 				local enteringUnit = GetEnteringUnit()
@@ -1533,7 +1683,6 @@ function ai.trig.Init()
 
 				if IsUnitInForce(enteringUnit, town.hostileForce) and town.state == "Relaxing" then
 					ai.town.State(townName, "Caution")
-					print("BAD GUY")
 				end
 			end
 
@@ -2078,10 +2227,27 @@ function Config()
 		ai.town.Extend("city", gg_rct_City_02)
 		ai.town.HostileForce("city", udg_townCityHostile)
 
+		-- Outer Village Town
 		ai.town.New("village", 3)
 		ai.town.Extend("village", gg_rct_OuterVilage_01)
-		ai.town.HostileForce("village", udg_townVillageHostile)
+		ai.town.HostileForce("village", udg_townCityHostile)
 
+		-- Set up Safehouses
+		-- City Safehouses
+		ai.landmark.New("city", "city01", gg_rct_CityRes01, {"safehouse"}, nil, 3)
+		ai.landmark.New("city", "city02", gg_rct_CityRes02, {"safehouse"}, nil, 3)
+		ai.landmark.New("city", "city03", gg_rct_CityRes03, {"safehouse"}, nil, 3)
+		ai.landmark.New("city", "city04", gg_rct_CityRes04, {"safehouse"}, nil, 2)
+		ai.landmark.New("city", "city05", gg_rct_CityRes05, {"safehouse"}, nil, 2)
+		ai.landmark.New("city", "city06", gg_rct_CityRes06, {"safehouse"}, nil, 2)
+		ai.landmark.New("city", "city07", gg_rct_CityRes07, {"safehouse"}, nil, 2)
+		ai.landmark.New("city", "city08", gg_rct_CityRes08, {"safehouse"}, nil, 2)
+		ai.landmark.New("city", "city09", gg_rct_CityRes09, {"safehouse"}, nil, 2)
+
+		-- Village Safehouses
+		ai.landmark.New("village", "village01", gg_rct_VIllageRes01, {"safehouse"}, nil, 2)
+		ai.landmark.New("village", "village02", gg_rct_VIllageRes02, {"safehouse"}, nil, 2)
+		ai.landmark.New("village", "village03", gg_rct_VIllageRes03, {"safehouse"}, nil, 2)
 
 		-- CounterClockwise Route (Listed as a looping route,
 		-- meaning units will start at the step closest to their
@@ -2154,20 +2320,6 @@ function Config()
 		--
 		-- Go To the other Town
 		ai.route.New("Out", true)
-		ai.route.Step(gg_rct_Region_031, 100)
-		ai.route.Step(gg_rct_Region_032, 100)
-		ai.route.Step(gg_rct_Region_033, 100)
-		ai.route.Step(gg_rct_Region_034, 100)
-		ai.route.Step(gg_rct_Region_035, 100)
-		ai.route.Step(gg_rct_Region_036, 100)
-		ai.route.Step(gg_rct_Region_038, 100)
-		ai.route.Step(gg_rct_Region_039, 100)
-		ai.route.Step(gg_rct_Region_040, 100)
-		ai.route.Step(gg_rct_Region_029, 100)
-		ai.route.Step(gg_rct_Region_030, 100)
-		ai.route.Step(gg_rct_Region_015, 100)
-		ai.route.Step(gg_rct_Region_016, 100)
-		ai.route.Step(gg_rct_Region_018, 100)
 		ai.route.Step(gg_rct_Region_019, 100)
 		ai.route.Step(gg_rct_Region_020, 100)
 		ai.route.Step(gg_rct_Region_021, 100)
@@ -2178,15 +2330,6 @@ function Config()
 		ai.route.Step(gg_rct_Region_026, 100)
 		ai.route.Step(gg_rct_Region_025, 100)
 		ai.route.Step(gg_rct_Region_019, 100)
-		ai.route.Step(gg_rct_Region_018, 100)
-		ai.route.Step(gg_rct_Region_017, 100)
-		ai.route.Step(gg_rct_Region_016, 100)
-		ai.route.Step(gg_rct_Region_015, 100)
-		ai.route.Step(gg_rct_Region_030, 100)
-		ai.route.Step(gg_rct_Region_002, 100)
-		ai.route.Step(gg_rct_Region_003, 100)
-		ai.route.Step(gg_rct_Region_004, 100)
-		ai.route.Step(gg_rct_Region_005, 100)
 		ai.route.Finish(100)
 
 		-- Gather Units Together
@@ -2198,23 +2341,41 @@ function Config()
 		--
 		-- Add all units on the map to AI
 		local g = CreateGroup()
+		local g2 = CreateGroup()
 
-		-- Find all units
-		g = GetUnitsInRectAll(GetPlayableMapRect())
+		-- Find all units in the city
+		g = GetUnitsInRectOfPlayer(gg_rct_City_01, Player(1))
+		g2 = GetUnitsInRectOfPlayer(gg_rct_City_02, Player(1))
+		GroupAddGroup(g2, g)
+		DestroyGroup(g2)
 
 		-- Loop through the units
 		local u = FirstOfGroup(g)
 		while u ~= nil do
 
-			-- ai.unit.New(townName, AIType, Unit, UnitName, Shift)
-			-- ai.unit.AddRoute(Unit, RouteName)
-
 			-- Add Unit (Will rename unit to the unit name specified)
 			ai.unit.New("city", "villager", u, GetUnitName(u), "day")
-
 			-- Add the routes that this unit has available to it when in the relax state
 			ai.unit.AddRoute(u, "city_01")
 			ai.unit.AddRoute(u, "city_02")
+			-- ai.unit.AddRoute(u, "Out")
+
+			GroupRemoveUnit(g, u)
+			u = FirstOfGroup(g)
+		end
+		DestroyGroup(g)
+
+		-- Get All units in the Village
+		g = GetUnitsInRectOfPlayer(gg_rct_OuterVilage_01, Player(1))
+
+		-- Loop through the units
+		u = FirstOfGroup(g)
+		while u ~= nil do
+
+			-- Add Unit (Will rename unit to the unit name specified)
+			ai.unit.New("village", "villager", u, GetUnitName(u), "day")
+
+			-- Add the routes that this unit has available to it when in the relax state
 			ai.unit.AddRoute(u, "Out")
 
 			GroupRemoveUnit(g, u)
@@ -2232,7 +2393,7 @@ function CreateUnitsForPlayer0()
     local unitID
     local t
     local life
-    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1185.4, -2129.8, 54.880, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1693.6, -2045.2, 301.507, FourCC("hfoo"))
 end
 
 function CreateUnitsForPlayer1()
@@ -2265,15 +2426,8 @@ function CreateUnitsForPlayer1()
     u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), -2506.9, -2766.9, 21.325, FourCC("nvlw"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 384.0, -721.4, 249.628, FourCC("nvlw"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 1417.1, -655.0, 193.288, FourCC("nvlw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("hkni"), 25.9, -326.9, 91.112, FourCC("hkni"))
-    u = BlzCreateUnitWithSkin(p, FourCC("hkni"), 1099.9, -399.0, 126.621, FourCC("hkni"))
     u = BlzCreateUnitWithSkin(p, FourCC("hpea"), -2005.1, -2731.9, 272.392, FourCC("hpea"))
     u = BlzCreateUnitWithSkin(p, FourCC("hpea"), -2206.8, -3172.9, 71.534, FourCC("hpea"))
-    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1005.5, 160.6, 36.948, FourCC("hfoo"))
-    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 923.4, -346.7, 144.387, FourCC("hfoo"))
-    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1476.3, -1598.1, 313.614, FourCC("hfoo"))
-    u = BlzCreateUnitWithSkin(p, FourCC("hspt"), -811.7, -581.3, 185.389, FourCC("hspt"))
-    SetUnitState(u, UNIT_STATE_MANA, 0)
 end
 
 function CreatePlayerBuildings()
@@ -2336,6 +2490,18 @@ function CreateRegions()
     gg_rct_City_01 = Rect(-1056.0, -768.0, 2368.0, 2432.0)
     gg_rct_City_02 = Rect(-2688.0, -1696.0, 768.0, 832.0)
     gg_rct_OuterVilage_01 = Rect(-2976.0, -3648.0, -352.0, -1824.0)
+    gg_rct_CityRes01 = Rect(-608.0, -480.0, -416.0, -320.0)
+    gg_rct_CityRes02 = Rect(1376.0, -672.0, 1568.0, -512.0)
+    gg_rct_CityRes03 = Rect(-256.0, 832.0, -64.0, 992.0)
+    gg_rct_CityRes04 = Rect(-1056.0, 416.0, -864.0, 576.0)
+    gg_rct_CityRes05 = Rect(1408.0, 608.0, 1600.0, 768.0)
+    gg_rct_CityRes06 = Rect(384.0, -32.0, 576.0, 128.0)
+    gg_rct_CityRes07 = Rect(-1408.0, 320.0, -1216.0, 480.0)
+    gg_rct_CityRes08 = Rect(-1504.0, 64.0, -1312.0, 224.0)
+    gg_rct_CityRes09 = Rect(-896.0, 1472.0, -704.0, 1632.0)
+    gg_rct_VIllageRes01 = Rect(-2592.0, -2688.0, -2400.0, -2528.0)
+    gg_rct_VIllageRes02 = Rect(-2400.0, -3264.0, -2208.0, -3104.0)
+    gg_rct_VIllageRes03 = Rect(-2080.0, -2784.0, -1888.0, -2624.0)
 end
 
 function Trig_Melee_Initialization_Actions()
@@ -2343,7 +2509,7 @@ function Trig_Melee_Initialization_Actions()
     FogEnableOff()
     FogMaskEnableOff()
     ForceAddPlayerSimple(Player(0), udg_townCityHostile)
-        ai.Init(3, 7)
+        ai.Init(2, 7)
         Config()
         ai.Start()
 end
@@ -2432,7 +2598,7 @@ function config()
     SetPlayers(1)
     SetTeams(1)
     SetGamePlacement(MAP_PLACEMENT_USE_MAP_SETTINGS)
-    DefineStartLocation(0, 1280.0, -2048.0)
+    DefineStartLocation(0, 1408.0, -1728.0)
     InitCustomPlayerSlots()
     SetPlayerSlotAvailable(Player(0), MAP_CONTROL_USER)
     InitGenericPlayerSlots()

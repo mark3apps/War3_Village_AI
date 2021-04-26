@@ -9,10 +9,27 @@ function Config()
 		ai.town.Extend("city", gg_rct_City_02)
 		ai.town.HostileForce("city", udg_townCityHostile)
 
+		-- Outer Village Town
 		ai.town.New("village", 3)
 		ai.town.Extend("village", gg_rct_OuterVilage_01)
-		ai.town.HostileForce("village", udg_townVillageHostile)
+		ai.town.HostileForce("village", udg_townCityHostile)
 
+		-- Set up Safehouses
+		-- City Safehouses
+		ai.landmark.New("city", "city01", gg_rct_CityRes01, {"safehouse"}, nil, 3)
+		ai.landmark.New("city", "city02", gg_rct_CityRes02, {"safehouse"}, nil, 3)
+		ai.landmark.New("city", "city03", gg_rct_CityRes03, {"safehouse"}, nil, 3)
+		ai.landmark.New("city", "city04", gg_rct_CityRes04, {"safehouse"}, nil, 2)
+		ai.landmark.New("city", "city05", gg_rct_CityRes05, {"safehouse"}, nil, 2)
+		ai.landmark.New("city", "city06", gg_rct_CityRes06, {"safehouse"}, nil, 2)
+		ai.landmark.New("city", "city07", gg_rct_CityRes07, {"safehouse"}, nil, 2)
+		ai.landmark.New("city", "city08", gg_rct_CityRes08, {"safehouse"}, nil, 2)
+		ai.landmark.New("city", "city09", gg_rct_CityRes09, {"safehouse"}, nil, 2)
+
+		-- Village Safehouses
+		ai.landmark.New("village", "village01", gg_rct_VIllageRes01, {"safehouse"}, nil, 2)
+		ai.landmark.New("village", "village02", gg_rct_VIllageRes02, {"safehouse"}, nil, 2)
+		ai.landmark.New("village", "village03", gg_rct_VIllageRes03, {"safehouse"}, nil, 2)
 
 		-- CounterClockwise Route (Listed as a looping route,
 		-- meaning units will start at the step closest to their
@@ -85,20 +102,6 @@ function Config()
 		--
 		-- Go To the other Town
 		ai.route.New("Out", true)
-		ai.route.Step(gg_rct_Region_031, 100)
-		ai.route.Step(gg_rct_Region_032, 100)
-		ai.route.Step(gg_rct_Region_033, 100)
-		ai.route.Step(gg_rct_Region_034, 100)
-		ai.route.Step(gg_rct_Region_035, 100)
-		ai.route.Step(gg_rct_Region_036, 100)
-		ai.route.Step(gg_rct_Region_038, 100)
-		ai.route.Step(gg_rct_Region_039, 100)
-		ai.route.Step(gg_rct_Region_040, 100)
-		ai.route.Step(gg_rct_Region_029, 100)
-		ai.route.Step(gg_rct_Region_030, 100)
-		ai.route.Step(gg_rct_Region_015, 100)
-		ai.route.Step(gg_rct_Region_016, 100)
-		ai.route.Step(gg_rct_Region_018, 100)
 		ai.route.Step(gg_rct_Region_019, 100)
 		ai.route.Step(gg_rct_Region_020, 100)
 		ai.route.Step(gg_rct_Region_021, 100)
@@ -109,15 +112,6 @@ function Config()
 		ai.route.Step(gg_rct_Region_026, 100)
 		ai.route.Step(gg_rct_Region_025, 100)
 		ai.route.Step(gg_rct_Region_019, 100)
-		ai.route.Step(gg_rct_Region_018, 100)
-		ai.route.Step(gg_rct_Region_017, 100)
-		ai.route.Step(gg_rct_Region_016, 100)
-		ai.route.Step(gg_rct_Region_015, 100)
-		ai.route.Step(gg_rct_Region_030, 100)
-		ai.route.Step(gg_rct_Region_002, 100)
-		ai.route.Step(gg_rct_Region_003, 100)
-		ai.route.Step(gg_rct_Region_004, 100)
-		ai.route.Step(gg_rct_Region_005, 100)
 		ai.route.Finish(100)
 
 		-- Gather Units Together
@@ -129,23 +123,41 @@ function Config()
 		--
 		-- Add all units on the map to AI
 		local g = CreateGroup()
+		local g2 = CreateGroup()
 
-		-- Find all units
-		g = GetUnitsInRectAll(GetPlayableMapRect())
+		-- Find all units in the city
+		g = GetUnitsInRectOfPlayer(gg_rct_City_01, Player(1))
+		g2 = GetUnitsInRectOfPlayer(gg_rct_City_02, Player(1))
+		GroupAddGroup(g2, g)
+		DestroyGroup(g2)
 
 		-- Loop through the units
 		local u = FirstOfGroup(g)
 		while u ~= nil do
 
-			-- ai.unit.New(townName, AIType, Unit, UnitName, Shift)
-			-- ai.unit.AddRoute(Unit, RouteName)
-
 			-- Add Unit (Will rename unit to the unit name specified)
 			ai.unit.New("city", "villager", u, GetUnitName(u), "day")
-
 			-- Add the routes that this unit has available to it when in the relax state
 			ai.unit.AddRoute(u, "city_01")
 			ai.unit.AddRoute(u, "city_02")
+			-- ai.unit.AddRoute(u, "Out")
+
+			GroupRemoveUnit(g, u)
+			u = FirstOfGroup(g)
+		end
+		DestroyGroup(g)
+
+		-- Get All units in the Village
+		g = GetUnitsInRectOfPlayer(gg_rct_OuterVilage_01, Player(1))
+
+		-- Loop through the units
+		u = FirstOfGroup(g)
+		while u ~= nil do
+
+			-- Add Unit (Will rename unit to the unit name specified)
+			ai.unit.New("village", "villager", u, GetUnitName(u), "day")
+
+			-- Add the routes that this unit has available to it when in the relax state
 			ai.unit.AddRoute(u, "Out")
 
 			GroupRemoveUnit(g, u)

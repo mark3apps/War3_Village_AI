@@ -40,8 +40,6 @@
 <li><a href="#Unit_Actions">Unit Actions </a></li>
 <li><a href="#Town_States">Town States </a></li>
 <li><a href="#Town_States_Transient">Town States Transient </a></li>
-<li><a href="#Landmark_States">Landmark States </a></li>
-<li><a href="#Landmark_States_Transient">Landmark States Transient </a></li>
 <li><a href="#Unit_States">Unit States </a></li>
 <li><a href="#Unit_States_Transient">Unit States Transient </a></li>
 <li><a href="#Intel_Checks">Intel Checks </a></li>
@@ -91,7 +89,7 @@
 	<td class="summary">Landmark Init runs when ai.Init() is run</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#ai.landmark.New">ai.landmark.New (town, name, rect, types, unit, radius, maxCapacity)</a></td>
+	<td class="name" nowrap><a href="#ai.landmark.New">ai.landmark.New (town, name, rect, types, unit, maxCapacity)</a></td>
 	<td class="summary">Creates a New Landmark and Adds it.</td>
 	</tr>
 </table>
@@ -301,24 +299,6 @@ Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}</td>
 	<td class="summary">comment</td>
 	</tr>
 </table>
-<h2><a href="#Landmark_States">Landmark States </a></h2>
-<table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#ai.landmarkSTATE.Init">ai.landmarkSTATE.Init ()</a></td>
-	<td class="summary">Landmark States Functions Init runs when ai.Init() is run</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#ai.landmarkSTATE.Relax">ai.landmarkSTATE.Relax (name)</a></td>
-	<td class="summary">comment</td>
-	</tr>
-</table>
-<h2><a href="#Landmark_States_Transient">Landmark States Transient </a></h2>
-<table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#ai.landmarkSTATE.Relaxing">ai.landmarkSTATE.Relaxing (name)</a></td>
-	<td class="summary">comment</td>
-	</tr>
-</table>
 <h2><a href="#Unit_States">Unit States </a></h2>
 <table class="function_list">
 	<tr>
@@ -328,6 +308,18 @@ Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}</td>
 	<tr>
 	<td class="name" nowrap><a href="#ai.unitSTATE.Move">ai.unitSTATE.Move (unit, route)</a></td>
 	<td class="summary">Will pick a route from the units available routes or specified route and send them on the quest</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.Flee">ai.unitSTATE.Flee (unit)</a></td>
+	<td class="summary">comment</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.Hide">ai.unitSTATE.Hide (unit)</a></td>
+	<td class="summary">comment</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.Return">ai.unitSTATE.Return (unit)</a></td>
+	<td class="summary">comment</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.unitSTATE.Relax">ai.unitSTATE.Relax (unit)</a></td>
@@ -351,6 +343,14 @@ Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}</td>
 	<tr>
 	<td class="name" nowrap><a href="#ai.unitSTATE.Waiting">ai.unitSTATE.Waiting (unit)</a></td>
 	<td class="summary">This is an inbetween state.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.Hiding">ai.unitSTATE.Hiding (unit)</a></td>
+	<td class="summary">comment</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.Fleeing">ai.unitSTATE.Fleeing (unit)</a></td>
+	<td class="summary">comment</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.unitSTATE.ReturningHome">ai.unitSTATE.ReturningHome (unit)</a></td>
@@ -401,6 +401,10 @@ Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}</td>
 	<tr>
 	<td class="name" nowrap><a href="#ai.trig.UnitEntersRoute">ai.trig.UnitEntersRoute</a></td>
 	<td class="summary">Trigger Unit enters a Rect in a Route</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.trig.UnitEntersLandmark">ai.trig.UnitEntersLandmark</a></td>
+	<td class="summary">Trigger Unit enters Landmark</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.trig.UnitEntersTown">ai.trig.UnitEntersTown</a></td>
@@ -515,7 +519,7 @@ Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}</td>
 </dd>
     <dt>
     <a name = "ai.landmark.New"></a>
-    <strong>ai.landmark.New (town, name, rect, types, unit, radius, maxCapacity)</strong>
+    <strong>ai.landmark.New (town, name, rect, types, unit, maxCapacity)</strong>
     </dt>
     <dd>
     Creates a New Landmark and Adds it.
@@ -537,9 +541,6 @@ Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}</td>
         </li>
         <li><span class="parameter">unit</span>
          table OPTIONAL nil |
-        </li>
-        <li><span class="parameter">radius</span>
-         number OPTIONAL 600 |
         </li>
         <li><span class="parameter">maxCapacity</span>
          number OPTIONAL Unlimited |
@@ -1780,87 +1781,6 @@ Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}
 
 </dd>
 </dl>
-    <h2 class="section-header "><a name="Landmark_States"></a>Landmark States </h2>
-
-    <dl class="function">
-    <dt>
-    <a name = "ai.landmarkSTATE.Init"></a>
-    <strong>ai.landmarkSTATE.Init ()</strong>
-    </dt>
-    <dd>
-    Landmark States Functions Init runs when ai.Init() is run
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        boolean
-    </ol>
-
-
-    <h3>See also:</h3>
-    <ul>
-         <a href="../modules/ai_class.html#ai.Init">ai.Init</a>
-    </ul>
-
-
-</dd>
-    <dt>
-    <a name = "ai.landmarkSTATE.Relax"></a>
-    <strong>ai.landmarkSTATE.Relax (name)</strong>
-    </dt>
-    <dd>
-    comment
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">name</span>
-         any
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        boolean
-    </ol>
-
-
-
-
-</dd>
-</dl>
-    <h2 class="section-header "><a name="Landmark_States_Transient"></a>Landmark States Transient </h2>
-
-    <dl class="function">
-    <dt>
-    <a name = "ai.landmarkSTATE.Relaxing"></a>
-    <strong>ai.landmarkSTATE.Relaxing (name)</strong>
-    </dt>
-    <dd>
-    comment
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">name</span>
-         any
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        boolean
-    </ol>
-
-
-
-
-</dd>
-</dl>
     <h2 class="section-header "><a name="Unit_States"></a>Unit States </h2>
 
     <dl class="function">
@@ -1902,6 +1822,81 @@ Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}
         </li>
         <li><span class="parameter">route</span>
          any @OPTIONAL | Random route picked from units routes | This is the route that the specified unit will go on.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unitSTATE.Flee"></a>
+    <strong>ai.unitSTATE.Flee (unit)</strong>
+    </dt>
+    <dd>
+    comment
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unitSTATE.Hide"></a>
+    <strong>ai.unitSTATE.Hide (unit)</strong>
+    </dt>
+    <dd>
+    comment
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unitSTATE.Return"></a>
+    <strong>ai.unitSTATE.Return (unit)</strong>
+    </dt>
+    <dd>
+    comment
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
         </li>
     </ul>
 
@@ -2032,6 +2027,56 @@ Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}
     <dd>
     This is an inbetween state.   Don't manually set it's state to this.
 
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unitSTATE.Hiding"></a>
+    <strong>ai.unitSTATE.Hiding (unit)</strong>
+    </dt>
+    <dd>
+    comment
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unitSTATE.Fleeing"></a>
+    <strong>ai.unitSTATE.Fleeing (unit)</strong>
+    </dt>
+    <dd>
+    comment
 
 
     <h3>Parameters:</h3>
@@ -2302,6 +2347,20 @@ Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}
 
 </dd>
     <dt>
+    <a name = "ai.trig.UnitEntersLandmark"></a>
+    <strong>ai.trig.UnitEntersLandmark</strong>
+    </dt>
+    <dd>
+    Trigger Unit enters Landmark
+
+
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "ai.trig.UnitEntersTown"></a>
     <strong>ai.trig.UnitEntersTown</strong>
     </dt>
@@ -2322,7 +2381,7 @@ Current list of states are {"Move", "Relax", "ReturnHome", "Wait"}
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2021-04-25 00:21:55 </i>
+<i style="float:right;">Last updated 2021-04-25 19:43:22 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
