@@ -1091,6 +1091,9 @@ function ai.unitSTATE.Init()
 	---@return boolean
 	function ai.unitSTATE.Move(unit, route)
 
+		udg_AI_TriggeringUnit = unit
+		TriggerExecuteBJ(gg_trg_Hook_Move, true)
+
 		local data = ai.unit[GetHandleId(unit)]
 
 		if #data.routes == 0 and data.route == nil then return false end
@@ -1108,6 +1111,9 @@ function ai.unitSTATE.Init()
 	---@param unit any
 	---@return boolean
 	function ai.unitSTATE.Flee(unit)
+
+		udg_AI_TriggeringUnit = unit
+		TriggerExecuteBJ(gg_trg_Hook_Flee, true)
 
 		Debugfunc(function()
 
@@ -1164,6 +1170,9 @@ function ai.unitSTATE.Init()
 	---@return boolean
 	function ai.unitSTATE.Hide(unit)
 
+		udg_AI_TriggeringUnit = unit
+		TriggerExecuteBJ(gg_trg_Hook_Hide, true)
+
 		Debugfunc(function()
 			local data = ai.unit[GetHandleId(unit)]
 			local landmark = ai.landmark[data.landmark]
@@ -1189,6 +1198,11 @@ function ai.unitSTATE.Init()
 	---@param unit any
 	---@return boolean
 	function ai.unitSTATE.Return(unit)
+
+		-- Run Trigger Hook
+		udg_AI_TriggeringUnit = unit
+		TriggerExecuteBJ(gg_trg_Hook_Return, true)
+
 		local data = ai.unit[GetHandleId(unit)]
 
 		Debugfunc(function()
@@ -1214,7 +1228,12 @@ function ai.unitSTATE.Init()
 	---@param unit any
 	---@return boolean
 	function ai.unitSTATE.Relax(unit)
+
+		udg_AI_TriggeringUnit = unit
+		TriggerExecuteBJ(gg_trg_Hook_Relax, true)
+
 		local data = ai.unit[GetHandleId(unit)]
+
 
 		-- Set state to Relaxing, then do nothing
 		ai.unit[data.id].state = "Relaxing"
@@ -1226,6 +1245,10 @@ function ai.unitSTATE.Init()
 	---@param unit any
 	---@return boolean
 	function ai.unitSTATE.Wait(unit)
+
+		udg_AI_TriggeringUnit = unit
+		TriggerExecuteBJ(gg_trg_Hook_Wait, true)
+
 		local data = ai.unit[GetHandleId(unit)]
 
 		-- Set state to waiting, then do nothing

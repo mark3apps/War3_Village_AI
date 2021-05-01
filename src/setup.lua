@@ -16,15 +16,15 @@ function Config()
 
 		-- Set up Safehouses
 		-- City Safehouses
-		ai.landmark.New("city", "city01", gg_rct_CityRes01, {"safehouse"}, nil, 3)
-		ai.landmark.New("city", "city02", gg_rct_CityRes02, {"safehouse"}, nil, 3)
-		ai.landmark.New("city", "city03", gg_rct_CityRes03, {"safehouse"}, nil, 3)
-		ai.landmark.New("city", "city04", gg_rct_CityRes04, {"safehouse"}, nil, 2)
-		ai.landmark.New("city", "city05", gg_rct_CityRes05, {"safehouse"}, nil, 2)
-		ai.landmark.New("city", "city06", gg_rct_CityRes06, {"safehouse"}, nil, 2)
-		ai.landmark.New("city", "city07", gg_rct_CityRes07, {"safehouse"}, nil, 2)
-		ai.landmark.New("city", "city08", gg_rct_CityRes08, {"safehouse"}, nil, 2)
-		ai.landmark.New("city", "city09", gg_rct_CityRes09, {"safehouse"}, nil, 2)
+		ai.landmark.New("city", "city01", gg_rct_CityRes01, {"safehouse","residence"}, nil, 3)
+		ai.landmark.New("city", "city02", gg_rct_CityRes02, {"safehouse","residence"}, nil, 3)
+		ai.landmark.New("city", "city03", gg_rct_CityRes03, {"safehouse","residence"}, nil, 3)
+		ai.landmark.New("city", "city04", gg_rct_CityRes04, {"safehouse","residence"}, nil, 2)
+		ai.landmark.New("city", "city05", gg_rct_CityRes05, {"safehouse","residence"}, nil, 2)
+		ai.landmark.New("city", "city06", gg_rct_CityRes06, {"safehouse","residence"}, nil, 2)
+		ai.landmark.New("city", "city07", gg_rct_CityRes07, {"safehouse","residence"}, nil, 2)
+		ai.landmark.New("city", "city08", gg_rct_CityRes08, {"safehouse","residence"}, nil, 2)
+		ai.landmark.New("city", "city09", gg_rct_CityRes09, {"safehouse","residence"}, nil, 2)
 
 		-- Village Safehouses
 		ai.landmark.New("village", "village01", gg_rct_VIllageRes01, {"safehouse"}, nil, 2)

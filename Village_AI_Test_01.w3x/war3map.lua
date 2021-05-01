@@ -52,10 +52,6 @@ gg_rct_Region_041 = nil
 gg_rct_City_01 = nil
 gg_rct_City_02 = nil
 gg_rct_OuterVilage_01 = nil
-gg_trg_Melee_Initialization = nil
-gg_trg_Action_Test = nil
-gg_trg_Send_Home = nil
-gg_trg_Gather_Units = nil
 gg_rct_CityRes01 = nil
 gg_rct_CityRes02 = nil
 gg_rct_CityRes03 = nil
@@ -68,6 +64,17 @@ gg_rct_CityRes09 = nil
 gg_rct_VIllageRes01 = nil
 gg_rct_VIllageRes02 = nil
 gg_rct_VIllageRes03 = nil
+gg_trg_Melee_Initialization = nil
+gg_trg_Action_Test = nil
+gg_trg_Send_Home = nil
+gg_trg_Gather_Units = nil
+gg_trg_Hook_Hide = nil
+gg_trg_Hook_Flee = nil
+gg_trg_Hook_Move = nil
+gg_trg_Hook_Relax = nil
+gg_trg_Hook_Wait = nil
+gg_trg_Hook_Return = nil
+gg_trg_Hook_ReturnHome = nil
 function InitGlobals()
     udg_townVillageHostile = CreateForce()
     udg_AI_TriggeringRoute = ""
@@ -1171,6 +1178,9 @@ function ai.unitSTATE.Init()
 	---@return boolean
 	function ai.unitSTATE.Move(unit, route)
 
+		udg_AI_TriggeringUnit = unit
+		TriggerExecuteBJ(gg_trg_Hook_Move, true)
+
 		local data = ai.unit[GetHandleId(unit)]
 
 		if #data.routes == 0 and data.route == nil then return false end
@@ -1188,6 +1198,9 @@ function ai.unitSTATE.Init()
 	---@param unit any
 	---@return boolean
 	function ai.unitSTATE.Flee(unit)
+
+		udg_AI_TriggeringUnit = unit
+		TriggerExecuteBJ(gg_trg_Hook_Flee, true)
 
 		Debugfunc(function()
 
@@ -1244,6 +1257,9 @@ function ai.unitSTATE.Init()
 	---@return boolean
 	function ai.unitSTATE.Hide(unit)
 
+		udg_AI_TriggeringUnit = unit
+		TriggerExecuteBJ(gg_trg_Hook_Hide, true)
+
 		Debugfunc(function()
 			local data = ai.unit[GetHandleId(unit)]
 			local landmark = ai.landmark[data.landmark]
@@ -1269,6 +1285,11 @@ function ai.unitSTATE.Init()
 	---@param unit any
 	---@return boolean
 	function ai.unitSTATE.Return(unit)
+
+		-- Run Trigger Hook
+		udg_AI_TriggeringUnit = unit
+		TriggerExecuteBJ(gg_trg_Hook_Return, true)
+
 		local data = ai.unit[GetHandleId(unit)]
 
 		Debugfunc(function()
@@ -1294,7 +1315,12 @@ function ai.unitSTATE.Init()
 	---@param unit any
 	---@return boolean
 	function ai.unitSTATE.Relax(unit)
+
+		udg_AI_TriggeringUnit = unit
+		TriggerExecuteBJ(gg_trg_Hook_Relax, true)
+
 		local data = ai.unit[GetHandleId(unit)]
+
 
 		-- Set state to Relaxing, then do nothing
 		ai.unit[data.id].state = "Relaxing"
@@ -1306,6 +1332,10 @@ function ai.unitSTATE.Init()
 	---@param unit any
 	---@return boolean
 	function ai.unitSTATE.Wait(unit)
+
+		udg_AI_TriggeringUnit = unit
+		TriggerExecuteBJ(gg_trg_Hook_Wait, true)
+
 		local data = ai.unit[GetHandleId(unit)]
 
 		-- Set state to waiting, then do nothing
@@ -2234,15 +2264,15 @@ function Config()
 
 		-- Set up Safehouses
 		-- City Safehouses
-		ai.landmark.New("city", "city01", gg_rct_CityRes01, {"safehouse"}, nil, 3)
-		ai.landmark.New("city", "city02", gg_rct_CityRes02, {"safehouse"}, nil, 3)
-		ai.landmark.New("city", "city03", gg_rct_CityRes03, {"safehouse"}, nil, 3)
-		ai.landmark.New("city", "city04", gg_rct_CityRes04, {"safehouse"}, nil, 2)
-		ai.landmark.New("city", "city05", gg_rct_CityRes05, {"safehouse"}, nil, 2)
-		ai.landmark.New("city", "city06", gg_rct_CityRes06, {"safehouse"}, nil, 2)
-		ai.landmark.New("city", "city07", gg_rct_CityRes07, {"safehouse"}, nil, 2)
-		ai.landmark.New("city", "city08", gg_rct_CityRes08, {"safehouse"}, nil, 2)
-		ai.landmark.New("city", "city09", gg_rct_CityRes09, {"safehouse"}, nil, 2)
+		ai.landmark.New("city", "city01", gg_rct_CityRes01, {"safehouse","residence"}, nil, 3)
+		ai.landmark.New("city", "city02", gg_rct_CityRes02, {"safehouse","residence"}, nil, 3)
+		ai.landmark.New("city", "city03", gg_rct_CityRes03, {"safehouse","residence"}, nil, 3)
+		ai.landmark.New("city", "city04", gg_rct_CityRes04, {"safehouse","residence"}, nil, 2)
+		ai.landmark.New("city", "city05", gg_rct_CityRes05, {"safehouse","residence"}, nil, 2)
+		ai.landmark.New("city", "city06", gg_rct_CityRes06, {"safehouse","residence"}, nil, 2)
+		ai.landmark.New("city", "city07", gg_rct_CityRes07, {"safehouse","residence"}, nil, 2)
+		ai.landmark.New("city", "city08", gg_rct_CityRes08, {"safehouse","residence"}, nil, 2)
+		ai.landmark.New("city", "city09", gg_rct_CityRes09, {"safehouse","residence"}, nil, 2)
 
 		-- Village Safehouses
 		ai.landmark.New("village", "village01", gg_rct_VIllageRes01, {"safehouse"}, nil, 2)
@@ -2487,7 +2517,7 @@ function CreateRegions()
     gg_rct_Region_039 = Rect(-576.0, 576.0, -288.0, 800.0)
     gg_rct_Region_040 = Rect(-768.0, -128.0, -576.0, 96.0)
     gg_rct_Region_041 = Rect(-1408.0, -3200.0, -1184.0, -2976.0)
-    gg_rct_City_01 = Rect(-1056.0, -768.0, 2368.0, 2432.0)
+    gg_rct_City_01 = Rect(-1568.0, -1120.0, 2368.0, 2432.0)
     gg_rct_City_02 = Rect(-2688.0, -1696.0, 768.0, 832.0)
     gg_rct_OuterVilage_01 = Rect(-2976.0, -3648.0, -352.0, -1824.0)
     gg_rct_CityRes01 = Rect(-608.0, -480.0, -416.0, -320.0)
@@ -2498,7 +2528,7 @@ function CreateRegions()
     gg_rct_CityRes06 = Rect(384.0, -32.0, 576.0, 128.0)
     gg_rct_CityRes07 = Rect(-1408.0, 320.0, -1216.0, 480.0)
     gg_rct_CityRes08 = Rect(-1504.0, 64.0, -1312.0, 224.0)
-    gg_rct_CityRes09 = Rect(-896.0, 1472.0, -704.0, 1632.0)
+    gg_rct_CityRes09 = Rect(-768.0, 1440.0, -576.0, 1600.0)
     gg_rct_VIllageRes01 = Rect(-2592.0, -2688.0, -2400.0, -2528.0)
     gg_rct_VIllageRes02 = Rect(-2400.0, -3264.0, -2208.0, -3104.0)
     gg_rct_VIllageRes03 = Rect(-2080.0, -2784.0, -1888.0, -2624.0)
@@ -2517,6 +2547,62 @@ end
 function InitTrig_Melee_Initialization()
     gg_trg_Melee_Initialization = CreateTrigger()
     TriggerAddAction(gg_trg_Melee_Initialization, Trig_Melee_Initialization_Actions)
+end
+
+function Trig_Hook_Hide_Actions()
+end
+
+function InitTrig_Hook_Hide()
+    gg_trg_Hook_Hide = CreateTrigger()
+    TriggerAddAction(gg_trg_Hook_Hide, Trig_Hook_Hide_Actions)
+end
+
+function Trig_Hook_Flee_Actions()
+end
+
+function InitTrig_Hook_Flee()
+    gg_trg_Hook_Flee = CreateTrigger()
+    TriggerAddAction(gg_trg_Hook_Flee, Trig_Hook_Flee_Actions)
+end
+
+function Trig_Hook_Move_Actions()
+end
+
+function InitTrig_Hook_Move()
+    gg_trg_Hook_Move = CreateTrigger()
+    TriggerAddAction(gg_trg_Hook_Move, Trig_Hook_Move_Actions)
+end
+
+function Trig_Hook_Relax_Actions()
+end
+
+function InitTrig_Hook_Relax()
+    gg_trg_Hook_Relax = CreateTrigger()
+    TriggerAddAction(gg_trg_Hook_Relax, Trig_Hook_Relax_Actions)
+end
+
+function Trig_Hook_Wait_Actions()
+end
+
+function InitTrig_Hook_Wait()
+    gg_trg_Hook_Wait = CreateTrigger()
+    TriggerAddAction(gg_trg_Hook_Wait, Trig_Hook_Wait_Actions)
+end
+
+function Trig_Hook_Return_Actions()
+end
+
+function InitTrig_Hook_Return()
+    gg_trg_Hook_Return = CreateTrigger()
+    TriggerAddAction(gg_trg_Hook_Return, Trig_Hook_Return_Actions)
+end
+
+function Trig_Hook_ReturnHome_Actions()
+end
+
+function InitTrig_Hook_ReturnHome()
+    gg_trg_Hook_ReturnHome = CreateTrigger()
+    TriggerAddAction(gg_trg_Hook_ReturnHome, Trig_Hook_ReturnHome_Actions)
 end
 
 function Trig_Action_Test_Actions()
@@ -2556,6 +2642,13 @@ end
 
 function InitCustomTriggers()
     InitTrig_Melee_Initialization()
+    InitTrig_Hook_Hide()
+    InitTrig_Hook_Flee()
+    InitTrig_Hook_Move()
+    InitTrig_Hook_Relax()
+    InitTrig_Hook_Wait()
+    InitTrig_Hook_Return()
+    InitTrig_Hook_ReturnHome()
     InitTrig_Action_Test()
     InitTrig_Send_Home()
     InitTrig_Gather_Units()
