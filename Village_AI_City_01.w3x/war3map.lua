@@ -1,11 +1,11 @@
 udg_townVillageHostile = nil
-udg_AI_TriggeringUnit = nil
-udg_AI_TriggeringRegion = nil
-udg_AI_TriggeringRoute = ""
-udg_AI_TriggeringStep = 0
-udg_AI_TriggeringAction = 0
-udg_AI_TriggeringState = ""
-udg_AI_TriggeringId = 0
+udg_VillageAI_TriggeringUnit = nil
+udg_VillageAI_TriggeringRegion = nil
+udg_VillageAI_TriggeringRoute = ""
+udg_VillageAI_TriggeringStep = 0
+udg_VillageAI_TriggeringAction = 0
+udg_VillageAI_TriggeringState = ""
+udg_VillageAI_TriggeringId = 0
 udg_townCityHostile = nil
 gg_rct_Region_000 = nil
 gg_rct_Region_001 = nil
@@ -65,23 +65,21 @@ gg_rct_VIllageRes01 = nil
 gg_rct_VIllageRes02 = nil
 gg_rct_VIllageRes03 = nil
 gg_trg_Melee_Initialization = nil
-gg_trg_Hook_Hide = nil
-gg_trg_Hook_Flee = nil
-gg_trg_Hook_Move = nil
-gg_trg_Hook_Relax = nil
-gg_trg_Hook_Wait = nil
-gg_trg_Hook_Return = nil
-gg_trg_Hook_ReturnHome = nil
+gg_trg_VillageAI_Hooks_Hide = nil
+gg_trg_VillageAI_Hooks_Flee = nil
+gg_trg_VillageAI_Hooks_Move = nil
+gg_trg_VillageAI_Hooks_Relax = nil
+gg_trg_VillageAI_Hooks_Wait = nil
+gg_trg_VillageAI_Hooks_Return = nil
+gg_trg_VillageAI_Hooks_ReturnHome = nil
 gg_trg_Action_Test = nil
-gg_trg_Send_Home = nil
-gg_trg_Gather_Units = nil
 function InitGlobals()
     udg_townVillageHostile = CreateForce()
-    udg_AI_TriggeringRoute = ""
-    udg_AI_TriggeringStep = 0
-    udg_AI_TriggeringAction = 0
-    udg_AI_TriggeringState = ""
-    udg_AI_TriggeringId = 0
+    udg_VillageAI_TriggeringRoute = ""
+    udg_VillageAI_TriggeringStep = 0
+    udg_VillageAI_TriggeringAction = 0
+    udg_VillageAI_TriggeringState = ""
+    udg_VillageAI_TriggeringId = 0
     udg_townCityHostile = CreateForce()
 end
 
@@ -2549,67 +2547,67 @@ function InitTrig_Melee_Initialization()
     TriggerAddAction(gg_trg_Melee_Initialization, Trig_Melee_Initialization_Actions)
 end
 
-function Trig_Hook_Hide_Actions()
+function Trig_VillageAI_Hooks_Hide_Actions()
 end
 
-function InitTrig_Hook_Hide()
-    gg_trg_Hook_Hide = CreateTrigger()
-    TriggerAddAction(gg_trg_Hook_Hide, Trig_Hook_Hide_Actions)
+function InitTrig_VillageAI_Hooks_Hide()
+    gg_trg_VillageAI_Hooks_Hide = CreateTrigger()
+    TriggerAddAction(gg_trg_VillageAI_Hooks_Hide, Trig_VillageAI_Hooks_Hide_Actions)
 end
 
-function Trig_Hook_Flee_Actions()
+function Trig_VillageAI_Hooks_Flee_Actions()
 end
 
-function InitTrig_Hook_Flee()
-    gg_trg_Hook_Flee = CreateTrigger()
-    TriggerAddAction(gg_trg_Hook_Flee, Trig_Hook_Flee_Actions)
+function InitTrig_VillageAI_Hooks_Flee()
+    gg_trg_VillageAI_Hooks_Flee = CreateTrigger()
+    TriggerAddAction(gg_trg_VillageAI_Hooks_Flee, Trig_VillageAI_Hooks_Flee_Actions)
 end
 
-function Trig_Hook_Move_Actions()
+function Trig_VillageAI_Hooks_Move_Actions()
 end
 
-function InitTrig_Hook_Move()
-    gg_trg_Hook_Move = CreateTrigger()
-    TriggerAddAction(gg_trg_Hook_Move, Trig_Hook_Move_Actions)
+function InitTrig_VillageAI_Hooks_Move()
+    gg_trg_VillageAI_Hooks_Move = CreateTrigger()
+    TriggerAddAction(gg_trg_VillageAI_Hooks_Move, Trig_VillageAI_Hooks_Move_Actions)
 end
 
-function Trig_Hook_Relax_Actions()
+function Trig_VillageAI_Hooks_Relax_Actions()
 end
 
-function InitTrig_Hook_Relax()
-    gg_trg_Hook_Relax = CreateTrigger()
-    TriggerAddAction(gg_trg_Hook_Relax, Trig_Hook_Relax_Actions)
+function InitTrig_VillageAI_Hooks_Relax()
+    gg_trg_VillageAI_Hooks_Relax = CreateTrigger()
+    TriggerAddAction(gg_trg_VillageAI_Hooks_Relax, Trig_VillageAI_Hooks_Relax_Actions)
 end
 
-function Trig_Hook_Wait_Actions()
+function Trig_VillageAI_Hooks_Wait_Actions()
 end
 
-function InitTrig_Hook_Wait()
-    gg_trg_Hook_Wait = CreateTrigger()
-    TriggerAddAction(gg_trg_Hook_Wait, Trig_Hook_Wait_Actions)
+function InitTrig_VillageAI_Hooks_Wait()
+    gg_trg_VillageAI_Hooks_Wait = CreateTrigger()
+    TriggerAddAction(gg_trg_VillageAI_Hooks_Wait, Trig_VillageAI_Hooks_Wait_Actions)
 end
 
-function Trig_Hook_Return_Actions()
+function Trig_VillageAI_Hooks_Return_Actions()
 end
 
-function InitTrig_Hook_Return()
-    gg_trg_Hook_Return = CreateTrigger()
-    TriggerAddAction(gg_trg_Hook_Return, Trig_Hook_Return_Actions)
+function InitTrig_VillageAI_Hooks_Return()
+    gg_trg_VillageAI_Hooks_Return = CreateTrigger()
+    TriggerAddAction(gg_trg_VillageAI_Hooks_Return, Trig_VillageAI_Hooks_Return_Actions)
 end
 
-function Trig_Hook_ReturnHome_Actions()
+function Trig_VillageAI_Hooks_ReturnHome_Actions()
 end
 
-function InitTrig_Hook_ReturnHome()
-    gg_trg_Hook_ReturnHome = CreateTrigger()
-    TriggerAddAction(gg_trg_Hook_ReturnHome, Trig_Hook_ReturnHome_Actions)
+function InitTrig_VillageAI_Hooks_ReturnHome()
+    gg_trg_VillageAI_Hooks_ReturnHome = CreateTrigger()
+    TriggerAddAction(gg_trg_VillageAI_Hooks_ReturnHome, Trig_VillageAI_Hooks_ReturnHome_Actions)
 end
 
 function Trig_Action_Test_Actions()
         local id = udg_AI_TriggeringId
-    DisplayTextToForce(GetPlayersAll(), GetUnitName(udg_AI_TriggeringUnit))
-    SetUnitLifePercentBJ(udg_AI_TriggeringUnit, 50.00)
-    AddSpecialEffectTargetUnitBJ("overhead", udg_AI_TriggeringUnit, "Abilities\\Spells\\Other\\TalkToMe\\TalkToMe.mdl")
+    DisplayTextToForce(GetPlayersAll(), GetUnitName(udg_VillageAI_TriggeringUnit))
+    SetUnitLifePercentBJ(udg_VillageAI_TriggeringUnit, 50.00)
+    AddSpecialEffectTargetUnitBJ("overhead", udg_VillageAI_TriggeringUnit, "Abilities\\Spells\\Other\\TalkToMe\\TalkToMe.mdl")
     DestroyEffectBJ(GetLastCreatedEffectBJ())
     TriggerSleepAction(2)
         ai.unit[id].stateCurrent = "TriggerFinished"
@@ -2620,38 +2618,16 @@ function InitTrig_Action_Test()
     TriggerAddAction(gg_trg_Action_Test, Trig_Action_Test_Actions)
 end
 
-function Trig_Send_Home_Actions()
-        ai.town.UnitsSetState("city", "ReturnHome")
-end
-
-function InitTrig_Send_Home()
-    gg_trg_Send_Home = CreateTrigger()
-    TriggerRegisterPlayerChatEvent(gg_trg_Send_Home, Player(0), "-home", true)
-    TriggerAddAction(gg_trg_Send_Home, Trig_Send_Home_Actions)
-end
-
-function Trig_Gather_Units_Actions()
-        ai.town.UnitsSetRoute("city", "gather")
-end
-
-function InitTrig_Gather_Units()
-    gg_trg_Gather_Units = CreateTrigger()
-    TriggerRegisterPlayerChatEvent(gg_trg_Gather_Units, Player(0), "-gather", true)
-    TriggerAddAction(gg_trg_Gather_Units, Trig_Gather_Units_Actions)
-end
-
 function InitCustomTriggers()
     InitTrig_Melee_Initialization()
-    InitTrig_Hook_Hide()
-    InitTrig_Hook_Flee()
-    InitTrig_Hook_Move()
-    InitTrig_Hook_Relax()
-    InitTrig_Hook_Wait()
-    InitTrig_Hook_Return()
-    InitTrig_Hook_ReturnHome()
+    InitTrig_VillageAI_Hooks_Hide()
+    InitTrig_VillageAI_Hooks_Flee()
+    InitTrig_VillageAI_Hooks_Move()
+    InitTrig_VillageAI_Hooks_Relax()
+    InitTrig_VillageAI_Hooks_Wait()
+    InitTrig_VillageAI_Hooks_Return()
+    InitTrig_VillageAI_Hooks_ReturnHome()
     InitTrig_Action_Test()
-    InitTrig_Send_Home()
-    InitTrig_Gather_Units()
 end
 
 function RunInitializationTriggers()
